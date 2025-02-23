@@ -3,13 +3,16 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Paperclip, Sparkles, Zap, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useMessage } from '@/hooks/use-message';
 import { useRouter } from 'next/navigation';
+import { useUser } from '@clerk/nextjs';
 
 export default function Home() {
-  // const { messages, setMessages } = useMessage([]);
+  const { user } = useUser(); //Lấy thông tin người dùng clerk
   const [userInput, setUserInput] = useState('');
   const router = useRouter();
+  if(user){
+    console.log(user); //Lấy thông tin người dùng clerk
+  }
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!userInput.trim()) return; // Prevent empty messages
