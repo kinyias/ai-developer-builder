@@ -3,6 +3,7 @@ import localFont from 'next/font/local';
 import { ThemeProvider } from '@/components/theme-provider';
 import Header from '@/components/layouts/Header';
 import { MessageProvider } from '@/context/MessageContext';
+import { ClerkProvider } from '@clerk/nextjs';
 
 const beVietnamPro = localFont({
   src: [
@@ -27,18 +28,20 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${beVietnamPro.className} antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Header />
-          <MessageProvider>{children}</MessageProvider>
-        </ThemeProvider>
-      </body>
-    </html>
+    <ClerkProvider dynamic afterSignOutUrl="/">
+      <html lang="en" suppressHydrationWarning>
+        <body className={`${beVietnamPro.className} antialiased`}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Header />
+            <MessageProvider>{children}</MessageProvider>
+          </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
