@@ -1,44 +1,84 @@
-'use client';
+'use client'; // Chỉ định rằng file này sẽ chạy trên client-side.
+
 import React, { useEffect, useState } from 'react';
 import {
-  SandpackProvider,
-  SandpackLayout,
-  SandpackCodeEditor,
-  SandpackPreview,
-  SandpackFileExplorer,
+  SandpackProvider, // Cung cấp môi trường Sandpack cho code sandbox.
+  SandpackLayout, // Layout chứa trình biên tập và xem trước code.
+  SandpackCodeEditor, // Trình chỉnh sửa code trong sandbox.
+  SandpackPreview, // Xem trước kết quả của code đang chạy.
+  SandpackFileExplorer, // Trình quản lý file trong sandbox.
 } from '@codesandbox/sandpack-react';
-import axios from 'axios';
-import { useMessage } from '@/hooks/use-message';
-import Prompt from '@/data/Prompt';
-import { Loader2Icon } from 'lucide-react';
+import axios from 'axios'; // Thư viện để gửi request HTTP.
+import Prompt from '@/data/Prompt'; // Nhập các prompt mặc định.
+import { Loader2Icon } from 'lucide-react'; // Biểu tượng loader hiển thị khi đang tải.
+import { useConvex, useMutation, useQuery } from 'convex/react'; // Hook để truy vấn dữ liệu từ Convex.
+import { api } from '@/convex/_generated/api'; // API của Convex để lấy dữ liệu.
+import { useParams } from 'next/navigation'; // Hook lấy tham số từ URL.
+
 export default function CodeView() {
-  const [activeTab, setActiveTab] = useState('code');
-  const [files, setFiles] = useState(Prompt.DEFAULT_FILE);
-  const { messages, setMessages } = useMessage();
-  const [loading, setLoading] = useState(false);
+  const { id } = useParams(); // Lấy workspace ID từ URL.
+  const [activeTab, setActiveTab] = useState('code'); // State lưu trạng thái tab đang mở (hiện tại mặc định là "code").
+  const [files, setFiles] = useState(Prompt.DEFAULT_FILE); // State lưu trữ danh sách file code.
+  const [loading, setLoading] = useState(false); // State để hiển thị trạng thái loading.
+
+  const UpdateFiles=useMutation(api.workspace.UpdateFiles)
+
+  const convex=useConvex();
+
+  useEffect(()=>{
+    id&&GetFiles();
+  },[id])
+
+  const GetFiles=async()=>{
+    const result=await convex.query(api.workspace.GetWorkspace,{
+      workspaceId:id
+    });
+    const mergedFiles = { ...Prompt.DEFAULT_FILE, ...result?.fileData }; //load lại trang vẫn có data của phiên đăng nhập đó
+    setFiles(mergedFiles); // Cập nhật state với mã nguồn mới.
+  }
+
+  // Lấy danh sách tin nhắn từ Convex theo workspace ID
+  const messages = useQuery(api.workspace.GetMessages, { workspaceId: id }) || [];
+
+  // Hàm gọi AI để sinh mã nguồn dựa trên tin nhắn cuối cùng của người dùng
   const generateAiCode = async () => {
-    setLoading(true);
+    if (messages.length === 0) return; // Nếu chưa có tin nhắn nào thì không làm gì.
+
+    setLoading(true); // Bật trạng thái loading để hiển thị spinner.
+
+    // Chuẩn bị nội dung prompt từ tin nhắn cuối cùng của user
     const PROMPT =
-      messages[messages?.length - 1].message + ': ' + Prompt.CODE_GEN_PROMPT;
+      JSON.stringify(messages)+ ': ' + Prompt.CODE_GEN_PROMPT;
+
+    // Gửi request đến API để lấy mã nguồn do AI sinh ra
     const result = await axios.post('/api/gen-ai-code', {
       prompt: PROMPT,
     });
-    const aiRes = JSON.parse(result.data);
-    console.log(aiRes);
 
+    // Chuyển đổi kết quả từ JSON
+    const aiRes = JSON.parse(result.data);
+    console.log(aiRes); // In ra console để kiểm tra dữ liệu trả về từ API.
+
+    // Gộp file mặc định với file do AI sinh ra
     const mergedFiles = { ...Prompt.DEFAULT_FILE, ...aiRes?.files };
-    setFiles(mergedFiles);
-    setLoading(false);
+    setFiles(mergedFiles); // Cập nhật state với mã nguồn mới.
+    setLoading(false); // Tắt trạng thái loading.
+
+    await UpdateFiles({
+      workspaceId:id,
+      files:aiRes?.files
+    }); //up file lên convex
   };
 
+  // useEffect chạy mỗi khi `messages` thay đổi
   useEffect(() => {
-    if (messages?.length > 0) {
-      const role = messages[messages?.length - 1].role;
-      if (role == 'user') {
-        generateAiCode();
+    if (messages.length > 0) { // Kiểm tra nếu có tin nhắn
+      const lastMessage = messages[messages.length - 1]; // Lấy tin nhắn cuối cùng
+      if (lastMessage.role === 'user') { // Nếu tin nhắn cuối cùng là của người dùng
+        generateAiCode(); // Gọi hàm để sinh mã nguồn từ AI.
       }
     }
-  }, [messages]);
+  }, [messages]); // useEffect sẽ chạy lại khi `messages` thay đổi.
   return (
     <div className="relative">
       <div className="bg-[#181818] w-full p-2 border">

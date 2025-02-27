@@ -1,34 +1,94 @@
-'use client';
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Paperclip, Sparkles, Zap, ArrowRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { useRouter } from 'next/navigation';
-import { useUser } from '@clerk/nextjs';
+'use client'; // Đánh dấu rằng file này chỉ chạy trên client-side (Next.js).
+
+import { useState, useEffect } from 'react'; // Import các hook của React để quản lý state và hiệu ứng.
+import { Button } from '@/components/ui/button'; // Import thành phần nút từ thư viện UI của dự án.
+import { Paperclip, Sparkles, Zap, ArrowRight } from 'lucide-react'; // Import các icon từ thư viện Lucide.
+import { cn } from '@/lib/utils'; // Hàm tiện ích để kết hợp className một cách linh hoạt.
+import { useRouter } from 'next/navigation'; // Hook để điều hướng trang trong Next.js.
+import { useUser } from '@clerk/nextjs'; // Hook để lấy thông tin người dùng từ Clerk (dịch vụ xác thực người dùng).
+import { api } from "../convex/_generated/api"; // Import API của Convex để truy vấn và cập nhật dữ liệu.
+import { v4 as uuidv4 } from "uuid"; // Thư viện tạo UUID ngẫu nhiên.
+import { useMutation, useQuery } from "convex/react"; // Hook của Convex để thực hiện mutation và query.
+import { useClerk } from "@clerk/nextjs"; // Hook của Clerk để xử lý xác thực người dùng.
+
+import Link from 'next/link'; // chạy pricing
 
 export default function Home() {
-  const { user } = useUser(); //Lấy thông tin người dùng clerk
-  const [userInput, setUserInput] = useState('');
-  const router = useRouter();
-  if(user){
-    console.log(user); //Lấy thông tin người dùng clerk
-  }
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!userInput.trim()) return; // Prevent empty messages
+  const { user } = useUser(); // Lấy thông tin người dùng đang đăng nhập từ Clerk.
+  const createUser = useMutation(api.users.CreateUser); // Gọi mutation để tạo user trong Convex.
+  const [userInput, setUserInput] = useState(''); // State lưu trữ nội dung input của người dùng.
+  const router = useRouter(); // Hook điều hướng của Next.js.
+  const createWorkspace = useMutation(api.workspace.CreateWorkspace); // Gọi API để tạo workspace trên Convex.
+  const users = useQuery(api.users.getUsers) || []; // Truy vấn danh sách người dùng từ Convex.
+  const [convexUserId, setConvexUserId] = useState(null); // State lưu ID của user trên Convex.
+  const { redirectToSignIn } = useClerk(); // Lấy hàm để chuyển hướng đăng nhập từ Clerk.
 
-    localStorage.setItem(
-      'chat',
-      JSON.stringify({ role: 'user', message: userInput, id: 1 })
-    );
-    router.push('/workspace/' + 1);
-  };
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSubmit(e);
+  // useEffect chạy khi `user` hoặc `users` thay đổi.
+  useEffect(() => {
+    if (user && users.length > 0) { // Kiểm tra xem user đã đăng nhập và có dữ liệu `users` từ Convex chưa.
+      const existingUser = users.find((u) => u.email === user.primaryEmailAddress?.emailAddress);
+      // Tìm kiếm user hiện tại trong danh sách user trên Convex dựa vào email.
+
+      if (existingUser) {
+        setConvexUserId(existingUser._id); // Nếu user đã tồn tại trong Convex, lưu lại ID của họ.
+      } else {
+        (async () => {
+          // Nếu user chưa tồn tại trong Convex, tạo một user mới.
+          const newUserId = await createUser({
+            name: user.fullName || "Người dùng mới", // Nếu không có tên, đặt mặc định.
+            email: user.primaryEmailAddress?.emailAddress || "", // Email từ Clerk.
+            picture: user.imageUrl || "", // Avatar từ Clerk.
+            uid: uuidv4(), // Tạo một UUID ngẫu nhiên để gán cho user.
+          });
+          setConvexUserId(newUserId); // Lưu ID user mới được tạo trong state.
+        })();
+      }
+    }
+  }, [user, users, createUser]); // useEffect chạy lại khi `user`, `users` hoặc `createUser` thay đổi.
+
+  // Xử lý sự kiện gửi tin nhắn
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Ngăn chặn hành vi mặc định của form.
+
+    if (!userInput.trim()) return; // Nếu input rỗng, không thực hiện gì cả.
+
+    if (!convexUserId) { 
+      // Nếu user chưa có ID trong Convex, chuyển hướng họ đến trang đăng nhập.
+      redirectToSignIn();
+      return;
+    }
+
+    // Tạo tin nhắn đầu tiên từ người dùng.
+    const msg = {
+      role: "user",
+      content: userInput,
+    };
+
+    try {
+      // Gửi yêu cầu tạo workspace trên Convex.
+      const workspaceId = await createWorkspace({
+        user: convexUserId, // Gửi ID của user lên Convex.
+        messages: [msg], // Bắt đầu workspace với tin nhắn đầu tiên.
+      });
+
+      console.log("Workspace đã tạo:", workspaceId); // Log để kiểm tra ID của workspace mới.
+
+      // Chuyển hướng đến workspace vừa tạo.
+      router.push(`/workspace/${workspaceId}`);
+    } catch (error) {
+      console.error("Lỗi khi tạo workspace:", error); // Log lỗi nếu có vấn đề xảy ra.
     }
   };
+
+  // Xử lý sự kiện nhấn phím Enter
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { 
+      // Kiểm tra nếu phím Enter được nhấn mà không giữ Shift (để tránh xuống dòng).
+      e.preventDefault(); // Ngăn chặn hành vi xuống dòng mặc định.
+      handleSubmit(e); // Gọi hàm gửi tin nhắn.
+    }
+  };
+
   return (
     <div className="flex flex-col h-full w-full ">
       <div className="min-h-screen bg-background text-foreground flex flex-col">
@@ -104,13 +164,13 @@ export default function Home() {
             </div>
           </div>
         </main>
-
+        
         {/* Footer */}
         <footer className="relative border-t p-4 text-sm text-muted-foreground">
           <div className="flex items-center justify-between max-w-7xl mx-auto">
             <div className="flex items-center gap-4">
               <Button variant="link" size="sm">
-                Link
+              <Link href="/pricing">Go to Pricing</Link>
               </Button>
               <Button variant="link" size="sm">
                 Link
