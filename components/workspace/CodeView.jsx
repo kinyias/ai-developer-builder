@@ -81,8 +81,8 @@ export default function CodeView() {
   }, [messages]); // useEffect sẽ chạy lại khi `messages` thay đổi.
   return (
     <div className="relative">
-      <div className="bg-[#181818] w-full p-2 border">
-        <div className="flex items-center flex-wrap shink-0 justify-center bg-black p-1 w-[140px] gap-3 rounded-full">
+      <div className="bg-[#cccccc] dark:bg-[#181818] w-full p-2 border">
+        <div className="flex items-center flex-wrap shink-0 justify-center bg-white dark:bg-black p-1 w-[140px] gap-3 rounded-full">
           <h2
             onClick={() => setActiveTab('code')}
             className={`text-sm cursor-pointer ${
@@ -105,7 +105,7 @@ export default function CodeView() {
       </div>
       <SandpackProvider
         template="react"
-        theme={'light'}
+        theme={localStorage.getItem('theme')}
         files={files}
         customSetup={{
           dependencies: Prompt.DEPENDANCY,

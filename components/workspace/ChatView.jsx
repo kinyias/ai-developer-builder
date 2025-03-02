@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation'; // Hook lấy tham số từ URL.
 import React, { useEffect, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'; // Thành phần hiển thị ảnh đại diện.
 import { Button } from '../ui/button'; // Thành phần nút bấm từ UI library.
-import { ArrowRight } from 'lucide-react'; // Biểu tượng mũi tên để gửi tin nhắn.
+import { ArrowRight, Loader2Icon } from 'lucide-react'; // Biểu tượng mũi tên để gửi tin nhắn.
 import { cn } from '@/lib/utils'; // Hàm tiện ích để kết hợp className.
 import axios from 'axios'; // Thư viện gửi request HTTP.
 import Prompt from '@/data/Prompt'; // Prompt mặc định cho AI.
@@ -15,25 +15,27 @@ import { useMutation, useQuery } from 'convex/react'; // Hook để tương tác
 import { api } from '@/convex/_generated/api'; // API từ Convex để truy vấn và cập nhật dữ liệu.
 import { useUserDetail } from '../../app/context/UserDetailContext';
 
-
-export const countToken = (inputText) => { 
-  return inputText.trim().split(/\s+/).filter(word => word).length; //hàm đếm token
+export const countToken = (inputText) => {
+  return inputText
+    .trim()
+    .split(/\s+/)
+    .filter((word) => word).length; //hàm đếm token
 };
 
 export default function ChatView() {
-  
   const { id } = useParams(); // Lấy workspace ID từ URL.
   const [userInput, setUserInput] = useState(''); // State lưu tin nhắn do người dùng nhập vào.
+  const [loading, setLoading] = useState(false);
 
   // Lấy danh sách tin nhắn từ Convex dựa vào workspace ID.
-  const messages = useQuery(api.workspace.GetMessages, { workspaceId: id }) || [];
+  const messages =
+    useQuery(api.workspace.GetMessages, { workspaceId: id }) || [];
   const { userDetail, setUserDetail } = useUserDetail(); // 💡 Lấy user chi tiết từ Context
-
 
   // Tạo mutation để cập nhật tin nhắn lên Convex.
   const updateMessages = useMutation(api.workspace.UpdateMessages);
-  //Tạo cái này để cập nhật token 
-  const UpdateTokens=useMutation(api.users.UpdateToken);
+  //Tạo cái này để cập nhật token
+  const UpdateTokens = useMutation(api.users.UpdateToken);
 
   // useEffect để kiểm tra nếu tin nhắn cuối cùng là của user thì gọi AI phản hồi.
   useEffect(() => {
@@ -47,6 +49,7 @@ export default function ChatView() {
 
   // Hàm gửi tin nhắn của AI
   const getAIResponse = async () => {
+    setLoading(true);
     // Tạo prompt từ danh sách tin nhắn hiện tại.
     const PROMPT = JSON.stringify(messages) + ': ' + Prompt.CHAT_PROMPT;
 
@@ -69,21 +72,26 @@ export default function ChatView() {
 
     //Cập nhật token của user
     //token hiện tại trừ cho token AI phẩn hồi(chuyển thành chuỗi Json để dếm bằng hàm countToken)
-    const token = Number(userDetail?.token) - Number(countToken(JSON.stringify(aiMessage))); 
+    const token =
+      Number(userDetail?.token) - Number(countToken(JSON.stringify(aiMessage)));
     if (userDetail?._id && !isNaN(token)) {
       await UpdateTokens({
-        userId: userDetail._id, 
-        token: token
+        userId: userDetail._id,
+        token: token,
       });
+      setLoading(false);
     } else {
-      console.error("Lỗi: userId hoặc token không hợp lệ!", { userId: userDetail?._id, token });
+      console.error('Lỗi: userId hoặc token không hợp lệ!', {
+        userId: userDetail?._id,
+        token,
+      });
     }
-    
   };
 
   // Hàm xử lý khi nhấn phím Enter để gửi tin nhắn.
   const handleKeyDown = async (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) { // Kiểm tra nếu nhấn Enter mà không giữ Shift.
+    if (e.key === 'Enter' && !e.shiftKey) {
+      // Kiểm tra nếu nhấn Enter mà không giữ Shift.
       e.preventDefault(); // Ngăn chặn hành vi mặc định của Enter (xuống dòng).
 
       // Tạo đối tượng tin nhắn từ người dùng.
@@ -101,7 +109,7 @@ export default function ChatView() {
           messages: [...messages, newMessage],
         });
       } catch (error) {
-        console.error("Lỗi khi cập nhật tin nhắn:", error);
+        console.error('Lỗi khi cập nhật tin nhắn:', error);
       }
     }
   };
@@ -125,6 +133,12 @@ export default function ChatView() {
             </div>
           </div>
         ))}
+        {loading && (
+          <div className="p-3 round-lg mb-2 flex gap-2 items-center bg-gray-200 dark:bg-secondary">
+            <Loader2Icon className="animate-spin" />
+            <h2>Generating response...</h2>
+          </div>
+        )}
       </div>
       <div className="w-full my-8 relative overflow-hidden">
         <form className="relative">
@@ -143,7 +157,9 @@ export default function ChatView() {
           <div
             className={cn(
               'absolute top-3 right-3 transition-all duration-300',
-              userInput ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'
+              userInput
+                ? 'opacity-100 translate-x-0'
+                : 'opacity-0 translate-x-4'
             )}
           >
             <Button
@@ -157,7 +173,9 @@ export default function ChatView() {
           <div
             className={cn(
               'absolute top-6 right-5 transition-all duration-300',
-              userInput ? 'opacity-0 translate-x-4' : 'opacity-100 translate-x-0'
+              userInput
+                ? 'opacity-0 translate-x-4'
+                : 'opacity-100 translate-x-0'
             )}
           >
             <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
