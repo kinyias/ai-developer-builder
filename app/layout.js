@@ -9,7 +9,6 @@ import ConvexClientProvider from './ConvexClientProvider';
 
 import { UserDetailProvider } from './context/UserDetailContext'; // Sử dụng đường dẫn tương đối
 
-
 const beVietnamPro = localFont({
   src: [
     {
@@ -44,14 +43,11 @@ export default function RootLayout({ children }) {
           >
             {/*Đặt ConvexClientProvider trước UserDetailProvider */}
             <ConvexClientProvider>
-              <UserDetailProvider> 
-                <Header />
-                <MessageProvider>{children}</MessageProvider>
-              </UserDetailProvider>
+              <UserDetailProvider>{children}</UserDetailProvider>
             </ConvexClientProvider>
           </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>
-  );  
+  );
 }

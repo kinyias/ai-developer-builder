@@ -6,7 +6,7 @@ import { Paperclip, Sparkles, Zap, ArrowRight } from 'lucide-react'; // Import c
 import { cn } from '@/lib/utils'; // Hàm tiện ích để kết hợp className một cách linh hoạt.
 import { useRouter } from 'next/navigation'; // Hook để điều hướng trang trong Next.js.
 import { useUser } from '@clerk/nextjs'; // Hook để lấy thông tin người dùng từ Clerk (dịch vụ xác thực người dùng).
-import { api } from "../convex/_generated/api"; // Import API của Convex để truy vấn và cập nhật dữ liệu.
+import { api } from "@/convex/_generated/api"; // Import API của Convex để truy vấn và cập nhật dữ liệu.
 import { v4 as uuidv4 } from "uuid"; // Thư viện tạo UUID ngẫu nhiên.
 import { useMutation, useQuery } from "convex/react"; // Hook của Convex để thực hiện mutation và query.
 import { useClerk } from "@clerk/nextjs"; // Hook của Clerk để xử lý xác thực người dùng.
