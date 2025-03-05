@@ -51,7 +51,7 @@ export default function CodeView() {
       JSON.stringify(messages)+ ': ' + Prompt.CODE_GEN_PROMPT;
 
     // Gửi request đến API để lấy mã nguồn do AI sinh ra
-    const result = await axios.post('/api/gen-ai-code', {
+    const result = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/gen-ai-code`, {
       prompt: PROMPT,
     });
 

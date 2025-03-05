@@ -11,7 +11,7 @@ function Pricing() {
             <h2 className='font-bold text-3xl'>Pricing</h2>
             <p className='text-gray-400 max-w-xl text-center mt-4'>{LOOKUP_DATA.PRICING_DESC}</p>
 
-            <div className='p-5 border rounded-xl w-full flex justify-between mt-7 items-center' style={{backgroundColor:"#222222"}}>
+            <div className='text-white p-5 border rounded-xl w-full flex justify-between mt-7 items-center' style={{backgroundColor:"#222222"}}>
                 <h2 className='text-lg'><span className='font-blod'>{userDetail?.token ?? 0}</span> Token còn lại</h2> 
                 {/* Khi load lại trang này, thông tin token lấy từ convex bị delay 1s , nên lúc chưa lấy dc thông tin thì sẽ là 0 token */}
                 <div className=''>

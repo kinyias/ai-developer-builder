@@ -65,7 +65,7 @@ function PricingMode() {
       {/* 🛒 Modal chọn phương thức thanh toán */}
       {showPaymentModal && selectedPricing && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-black p-6 rounded-lg shadow-lg">
+          <div className="bg-black text-white p-6 rounded-lg shadow-lg">
             <h2 className="text-xl font-bold mb-4">Xác nhận thanh toán</h2>
             <p className="mb-2">Bạn đang mua gói: <strong>{selectedPricing.name}</strong></p>
             <p className="mb-4">Số tiền: <strong>{selectedPricing.price} VND</strong></p>
