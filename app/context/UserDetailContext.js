@@ -16,17 +16,12 @@ export function UserDetailProvider({ children }) {
   });
 
   useEffect(() => {
+
     if (fetchedUser !== undefined && fetchedUser !== null) {
       setUserDetail(fetchedUser);
     }
   }, [fetchedUser]);
 
-  // ✅ Đặt lại userDetail khi user thay đổi (logout)
-  useEffect(() => {
-    if (!user) {
-      setUserDetail(null);
-    }
-  }, [user]);
 
   return (
     <UserDetailContext.Provider value={{ userDetail, setUserDetail }}>

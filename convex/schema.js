@@ -9,6 +9,14 @@ export default defineSchema({ //bảng user
         uid:v.string(),
         token:v.optional(v.number())
     }),
+    orders: defineTable({
+        userId: v.id("users"),           // ✅ Dùng string để lưu userId
+        amount: v.number(),
+        currencyCode: v.string(),
+        status: v.string(),
+        createdAt: v.string(),
+        transId: v.optional(v.string()), // ✅ Mã giao dịch Momo
+    }),
     workspace:defineTable({
         messages:v.any(),
         fileData:v.optional(v.any()),
