@@ -66,9 +66,6 @@ export const CreateOrder = mutation({
       transId: args.transId || null,
     });
 
-    // const updatedToken = (user.token || 0) + args.amount;
-    // await ctx.db.patch(user._id, { token: updatedToken });
-
     return order;
   },
 });
@@ -124,4 +121,17 @@ export const getLatestCustomers = query(async ({ db }) => {
 
   console.log(" Khách hàng gần đây:", customers);
   return customers;
+});
+
+// Tổng doanh thu
+export const getTotalRevenue = query(async ({ db }) => {
+  const allOrders = await db.query("orders").collect();
+  const totalRevenue = allOrders.reduce((sum, order) => sum + order.amount, 0);
+  return totalRevenue;
+});
+
+// Tổng số lượng đơn hàng
+export const getTotalOrders = query(async ({ db }) => {
+  const totalOrders = await db.query("orders").collect();
+  return totalOrders.length;
 });

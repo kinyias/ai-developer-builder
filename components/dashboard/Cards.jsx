@@ -7,6 +7,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 export default function DashboardCards() {
   // Lấy tổng số khách hàng từ Convex
   const totalCustomers = useQuery(api.users.getTotalCustomers) || 0;
+  // Lấy tổng doanh thu và tổng số đơn hàng từ Convex
+  const totalRevenue = useQuery(api.orders.getTotalRevenue) || 0;
+  const totalOrders = useQuery(api.orders.getTotalOrders) || 0;
+
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       <Card>
@@ -15,8 +19,8 @@ export default function DashboardCards() {
           <DollarSign className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">45,231,890đ</div>
-          <p className="text-xs text-muted-foreground">+20.1% so với tháng trước</p>
+          <div className="text-2xl font-bold">{totalRevenue.toLocaleString()}đ</div>
+          <p className="text-xs text-muted-foreground"></p>
           <div className="mt-4 h-1 w-full rounded-full bg-muted">
             <div className="h-1 w-[75%] rounded-full bg-primary"></div>
           </div>
@@ -24,12 +28,12 @@ export default function DashboardCards() {
       </Card>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Lượt đăng kí gói</CardTitle>
+          <CardTitle className="text-sm font-medium">Tổng đơn hàng</CardTitle>
           <CreditCard className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">+2350</div>
-          <p className="text-xs text-muted-foreground">+180.1% so với tháng trước</p>
+          <div className="text-2xl font-bold">{totalOrders}</div>
+          <p className="text-xs text-muted-foreground"></p>
           <div className="mt-4 h-1 w-full rounded-full bg-muted">
             <div className="h-1 w-[65%] rounded-full bg-primary"></div>
           </div>
