@@ -38,6 +38,8 @@
 // });
 
 ///test
+import { query } from "./_generated/server"; // CẦN IMPORT query!
+import LOOKUP_DATA from "../data/Lookup"
 import { mutation } from "./_generated/server";
 import { v } from "convex/values";
 export const CreateOrder = mutation({
@@ -89,4 +91,37 @@ export const UpdateToken = mutation({
 
     return { success: true, newToken: updatedToken };
   },
+});
+//Giới hạn lấy 5 đơn hàng mới nhất: truongan
+export const getLatestCustomers = query(async ({ db }) => {
+  // Lấy tất cả đơn hàng, sau đó lọc status === "success" (tối ưu hơn nếu có createdAt để sắp xếp)
+  const allOrders = await db.query("orders").collect();
+
+  // Chỉ lấy 5 đơn hàng mới nhất có status là "success"
+  const latestOrders = allOrders
+    .filter((order) => order.status === "success")
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sắp xếp giảm dần theo createdAt
+    .slice(0, 5); // Lấy 5 đơn gần nhất
+
+  console.log("🔹 Đơn hàng mới nhất:", latestOrders);
+
+  // Hàm tìm plan theo số token (amount)
+  const findPlanByTokens = (tokens) => {
+    const plan = LOOKUP_DATA.PRICING_OPTIONS.find(p => parseInt(p.tokens.replace("K", "000")) === tokens);
+    return plan ? plan.name : "Miễn phí";
+  };
+
+  // Lấy thông tin user + plan từ order
+  const customers = await Promise.all(
+    latestOrders.map(async (order) => {
+      const user = await db.get(order.userId);
+      return {
+        name: user?.name || "Unknown",
+        plan: findPlanByTokens(order.amount), // Tìm gói theo số token
+      };
+    })
+  );
+
+  console.log(" Khách hàng gần đây:", customers);
+  return customers;
 });

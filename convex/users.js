@@ -61,3 +61,9 @@ export const UpdateToken=mutation({
     return result;
   }
 });
+
+//lay tong so user
+export const getTotalCustomers = query(async ({ db }) => {
+  const users = await db.query("users").collect(); // Lấy tất cả user
+  return users.length; // Trả về tổng số user
+});

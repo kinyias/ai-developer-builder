@@ -1,7 +1,12 @@
+"use client";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 import { Users, CreditCard, DollarSign, Activity } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function DashboardCards() {
+  // Lấy tổng số khách hàng từ Convex
+  const totalCustomers = useQuery(api.users.getTotalCustomers) || 0;
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
       <Card>
@@ -36,8 +41,8 @@ export default function DashboardCards() {
           <Users className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">+12,234</div>
-          <p className="text-xs text-muted-foreground">+19% so với tháng trước</p>
+          <div className="text-2xl font-bold">+{totalCustomers}</div>
+          {/* <p className="text-xs text-muted-foreground">+19% so với tháng trước</p> */}
           <div className="mt-4 h-1 w-full rounded-full bg-muted">
             <div className="h-1 w-[45%] rounded-full bg-primary"></div>
           </div>
