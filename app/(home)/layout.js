@@ -1,17 +1,26 @@
+'use client';
 import AppSideBar from "@/components/layouts/AppSideBar";
 import Header from "@/components/layouts/Header";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import ChatView from "@/components/workspace/ChatView";
+import { ActionContext } from "@/context/ActionContext";
 import { MessageProvider } from "@/context/MessageContext";
+import { useState } from "react";
 
 export default function HomeLayout({ children }) {
+
   return (
     <>
-      <Header />
-      <SidebarProvider>
-        <AppSideBar />
+      
+       
+        <SidebarProvider defaultOpen={false}>
 
-        <MessageProvider>{children}</MessageProvider>
-      </SidebarProvider>
+          <AppSideBar />
+          {children}
+          <SidebarTrigger />
+          <MessageProvider></MessageProvider>
+        </SidebarProvider>
+    
     </>
   );
 }

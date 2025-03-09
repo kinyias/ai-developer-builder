@@ -95,7 +95,7 @@ export const GetMessages = query({
 
 export const GetAllWorkspace=query({
   args:{
-    userId:v.id('user')
+    userId:v.id('users')
   },
   handler:async(ctx,args)=>{
     const result=await ctx.db.query('workspace')

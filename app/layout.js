@@ -8,6 +8,8 @@ import { ClerkProvider } from '@clerk/nextjs';
 import ConvexClientProvider from './ConvexClientProvider';
 
 import { UserDetailProvider } from './context/UserDetailContext'; // Sử dụng đường dẫn tương đối
+import { useState } from 'react';
+import { ActionContext } from '@/context/ActionContext';
 
 const beVietnamPro = localFont({
   src: [
@@ -31,23 +33,29 @@ const beVietnamPro = localFont({
 // };
 
 export default function RootLayout({ children }) {
+  const [action, setAction] = useState();
   return (
+
     <ClerkProvider dynamic afterSignOutUrl="/">
       <html lang="en" suppressHydrationWarning>
         <body className={`${beVietnamPro.className} antialiased`}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="light"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {/*Đặt ConvexClientProvider trước UserDetailProvider */}
-            <ConvexClientProvider>
-              <UserDetailProvider>{children}</UserDetailProvider>
-            </ConvexClientProvider>
-          </ThemeProvider>
+          
+          <ActionContext.Provider value={{ action, setAction }}>
+              <Header/>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="light"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {/*Đặt ConvexClientProvider trước UserDetailProvider */}
+              <ConvexClientProvider>
+                <UserDetailProvider>{children}</UserDetailProvider>
+              </ConvexClientProvider>
+            </ThemeProvider>
+          </ActionContext.Provider>
         </body>
       </html>
-    </ClerkProvider>
+    </ClerkProvider >
   );
 }

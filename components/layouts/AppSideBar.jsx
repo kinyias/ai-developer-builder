@@ -1,4 +1,5 @@
 
+'use client'
 import React from "react";
 import {
     Sidebar,
@@ -10,20 +11,21 @@ import {
 import { Button } from "../ui/button";
 import { MessageCircleCode } from "lucide-react";
 import WorkSpaceHistory from "./WorkspaceHistory";
-//import SideBarFooter from "./SideBarFooter";
-//import { useRouter } from "next/navigation";
+import SideBarFooter from "./SideBarFooter";
+
+import { useRouter } from "next/navigation";
 
 
 function AppSideBar() {
-    //const router=useRouter();
-    // const handleStartNewChat = () => {
-    //     router.replace('/'); // Chuyển hướng đến trang chủ
-    // };
-    //onClick={handleStartNewChat}
+    const router=useRouter();
+    const handleStartNewChat = () => {
+        router.replace('/'); // Chuyển hướng đến trang chủ
+    };
+
     return (
         <Sidebar>
             <SidebarHeader className="p-5">
-                <Button className="mt-5" >
+                <Button className="mt-5" onClick={handleStartNewChat} >
                     <MessageCircleCode   /> Start new chat
                 </Button>
             </SidebarHeader>
@@ -35,7 +37,7 @@ function AppSideBar() {
                 <SidebarGroup />
             </SidebarContent>
             <SidebarFooter>
-                {/* <SideBarFooter /> */}
+                <SideBarFooter />
             </SidebarFooter>
         </Sidebar>
     );

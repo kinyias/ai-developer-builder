@@ -11,9 +11,13 @@ import axios from 'axios'; // Thư viện gửi request HTTP.
 import Prompt from '@/data/Prompt'; // Prompt mặc định cho AI.
 import ReactMarkdown from 'react-markdown'; // Thư viện để hiển thị nội dung markdown.
 
-import { useMutation, useQuery } from 'convex/react'; // Hook để tương tác với Convex.
+import { useConvex, useMutation, useQuery } from 'convex/react'; // Hook để tương tác với Convex.
 import { api } from '@/convex/_generated/api'; // API từ Convex để truy vấn và cập nhật dữ liệu.
 import { useUserDetail } from '../../app/context/UserDetailContext';
+
+import Image from 'next/image';
+import { useSidebar } from '../ui/sidebar';
+
 
 export const countToken = (inputText) => {
   return inputText
@@ -26,7 +30,9 @@ export default function ChatView() {
   const { id } = useParams(); // Lấy workspace ID từ URL.
   const [userInput, setUserInput] = useState(''); // State lưu tin nhắn do người dùng nhập vào.
   const [loading, setLoading] = useState(false);
-
+   const { toggleSidebar } = useSidebar();
+ 
+  const convex=useConvex();
   // Lấy danh sách tin nhắn từ Convex dựa vào workspace ID.
   const messages =
     useQuery(api.workspace.GetMessages, { workspaceId: id }) || [];
@@ -113,10 +119,10 @@ export default function ChatView() {
       }
     }
   };
-
+  
   return (
     <div className="relative h-[85vh] flex flex-col">
-      <div className="flex-1 overflow-y-scroll scrollbar-hide">
+      <div className="flex-1 overflow-y-scroll scrollbar-hide pl-5">
         {messages.map((msg, index) => (
           <div
             key={index}
@@ -142,43 +148,49 @@ export default function ChatView() {
       </div>
       <div className="w-full my-8 relative overflow-hidden">
         <form className="relative">
-          <div className="p-5 border rounded-xl w-full">
-            <div className="flex gap-2">
-              <textarea
-                className="outline-none bg-transparent w-full h-32 max-h-56 resize-none mr-8"
-                value={userInput}
-                onChange={(e) => setUserInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="How can I help you today?"
-              ></textarea>
+          <div className='flex gap-2  items-end'  >
+              {userDetail && <Image src={userDetail?.picture} 
+              className='rounded-full cursor-pointer'
+              onClick={toggleSidebar}  
+              alt='user' width={30} height={30}/>}
+            <div className="p-5 border rounded-xl w-full">
+              <div className="flex gap-2">
+                <textarea
+                  className="outline-none bg-transparent w-full h-32 max-h-56 resize-none mr-8"
+                  value={userInput}
+                  onChange={(e) => setUserInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="How can I help you today?"
+                ></textarea>
+              </div>
             </div>
-          </div>
 
-          <div
-            className={cn(
-              'absolute top-3 right-3 transition-all duration-300',
-              userInput
-                ? 'opacity-100 translate-x-0'
-                : 'opacity-0 translate-x-4'
-            )}
-          >
-            <Button
-              type="submit"
-              size="icon"
-              className="bg-primary text-primary-foreground hover:bg-primary/90"
+            <div
+              className={cn(
+                'absolute top-3 right-3 transition-all duration-300',
+                userInput
+                  ? 'opacity-100 translate-x-0'
+                  : 'opacity-0 translate-x-4'
+              )}
             >
-              <ArrowRight className="h-5 w-5" />
-            </Button>
-          </div>
-          <div
-            className={cn(
-              'absolute top-6 right-5 transition-all duration-300',
-              userInput
-                ? 'opacity-0 translate-x-4'
-                : 'opacity-100 translate-x-0'
-            )}
-          >
-            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+              <Button
+                type="submit"
+                size="icon"
+                className="bg-primary text-primary-foreground hover:bg-primary/90"
+              >
+                <ArrowRight className="h-5 w-5" />
+              </Button>
+            </div>
+            <div
+              className={cn(
+                'absolute top-6 right-5 transition-all duration-300',
+                userInput
+                  ? 'opacity-0 translate-x-4'
+                  : 'opacity-100 translate-x-0'
+              )}
+            >
+              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+            </div>
           </div>
         </form>
       </div>

@@ -14,6 +14,7 @@ import { Loader2Icon } from 'lucide-react'; // Biểu tượng loader hiển th�
 import { useConvex, useMutation, useQuery } from 'convex/react'; // Hook để truy vấn dữ liệu từ Convex.
 import { api } from '@/convex/_generated/api'; // API của Convex để lấy dữ liệu.
 import { useParams } from 'next/navigation'; // Hook lấy tham số từ URL.
+import SandpackPreviewClient from '../layouts/SandpackPreviewClient';
 
 export default function CodeView() {
   const { id } = useParams(); // Lấy workspace ID từ URL.
@@ -122,10 +123,7 @@ export default function CodeView() {
             </>
           ) : (
             <>
-              <SandpackPreview
-                style={{ height: '80vh' }}
-                showNavigator={true}
-              />
+              <SandpackPreviewClient/>
             </>
           )}
         </SandpackLayout>
