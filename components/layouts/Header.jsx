@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth, UserButton } from '@clerk/nextjs';
 import { Rocket, Download } from "lucide-react";
 import { ActionContext } from '@/context/ActionContext';
+import { SidebarTrigger } from '../ui/sidebar';
 
 
 export default function Header() {
@@ -28,7 +29,7 @@ export default function Header() {
 
   return (
     <nav className="relative flex items-center justify-between p-4 border-b">
-      <div className="text-xl font-bold">Builder</div>
+      <div className="text-xl font-bold"> <SidebarTrigger />Builder</div>
       <div className="flex items-center gap-4">
         <UserButton />
 

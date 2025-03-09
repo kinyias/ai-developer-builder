@@ -41,7 +41,6 @@ export default function RootLayout({ children }) {
         <body className={`${beVietnamPro.className} antialiased`}>
           
           <ActionContext.Provider value={{ action, setAction }}>
-              <Header/>
             <ThemeProvider
               attribute="class"
               defaultTheme="light"
