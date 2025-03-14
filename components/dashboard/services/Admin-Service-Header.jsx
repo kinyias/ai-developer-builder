@@ -12,8 +12,28 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-export default function AdminServicesHeader() {
+import { useQuery } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+
+export default function AdminServicesHeader({ setSearchResults }) {
+  const [email, setEmail] = useState('');
   const [status, setStatus] = useState('all');
+
+  const handleSearch = async () => {
+    if (!email) {
+      alert("Vui lòng nhập email để tìm kiếm!");
+      return;
+    }
+
+    try {
+      // ✅ Gọi API để tìm đơn hàng theo email
+      const orders = await api.orders.searchOrdersByEmail({ email });
+      setSearchResults(orders);
+      console.log("✅ Kết quả tìm kiếm:", orders);
+    } catch (error) {
+      console.error("❌ Lỗi khi tìm kiếm đơn hàng:", error);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -29,11 +49,14 @@ export default function AdminServicesHeader() {
         <div className="relative w-full sm:w-64">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
-            type="search"
-            placeholder="Search services..."
+            type="email"
+            placeholder="Nhập email..."
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="w-full pl-8"
           />
         </div>
+        <Button onClick={handleSearch}>Tìm kiếm</Button>
         <Select value={status} onValueChange={setStatus}>
           <SelectTrigger className="w-full sm:w-40">
             <SelectValue placeholder="Filter by status" />
