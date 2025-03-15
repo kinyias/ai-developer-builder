@@ -69,11 +69,11 @@ export const getLatestCustomers = query(async ({ db }) => {
 
   console.log("🔹 Đơn hàng mới nhất:", latestOrders);
 
-  // Hàm tìm plan theo số token (amount)
-  const findPlanByTokens = (tokens) => {
-    const plan = LOOKUP_DATA.PRICING_OPTIONS.find(p => parseInt(p.tokens.replace("K", "000")) === tokens);
-    return plan ? plan.name : "Miễn phí";
-  };
+  // Hàm tìm plan
+  // const findPlanByPrice = (price) => {
+  //   const plan = LOOKUP_DATA.PRICING_OPTIONS.find(p => Math.floor(p.price_f) === Math.floor(price));
+  //   return plan ? plan.name : "Miễn phí";
+  // };
 
   // Lấy thông tin user + plan từ order
   const customers = await Promise.all(
@@ -81,7 +81,7 @@ export const getLatestCustomers = query(async ({ db }) => {
       const user = await db.get(order.userId);
       return {
         name: user?.name || "Unknown",
-        plan: findPlanByTokens(order.amount), // Tìm gói theo số token
+        plan: findPlanByPrice(order.amount), // Tìm gói t
       };
     })
   );
@@ -163,7 +163,8 @@ export const getAllOrders = query(async ({ db }) => {
 });
 
 //dua vao pricing data lay plan
-export const findPlanByTokens = (tokens) => {
-  const plan = LOOKUP_DATA.PRICING_OPTIONS.find(p => parseInt(p.tokens.replace("K", "000")) === tokens);
+export const findPlanByPrice = (price) => {
+  const plan = LOOKUP_DATA.PRICING_OPTIONS.find(p => Math.floor(p.price_f) === Math.floor(price));
   return plan ? plan.name : "Miễn phí";
 };
+

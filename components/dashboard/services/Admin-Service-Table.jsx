@@ -19,7 +19,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 //import { getAllUsers } from "../../../convex/users"; // Import hàm getAllUsers từ file users.js
-import { findPlanByTokens } from "../../../convex/orders";
+import { findPlanByPrice } from "../../../convex/orders";
 
 // Sample data for registered services
 // const services = [
@@ -112,8 +112,8 @@ const orders = useQuery(api.orders.getAllOrders) || [];
       user: user?.name || "Unknown",
       email: user?.email || "N/A",
       registeredDate: order.createdAt,
-      // expiryDate: "Chưa xử lý", // TODO: Tính ngày hết hạn
-      plan: findPlanByTokens(order.amount),
+      expiryDate: order.expiryDate, // TODO: Tính ngày hết hạn
+      plan: findPlanByPrice(order.amount),
       // status: order.status || "Chưa xử lý", // TODO: Kiểm tra trạng thái từ đơn hàng
     };
   });
@@ -155,7 +155,9 @@ const orders = useQuery(api.orders.getAllOrders) || [];
           <TableBody>
             {services.map((service) => (
               <TableRow key={service.id}>
-                <TableCell className="font-medium">{service.id}</TableCell>
+                <TableCell className="font-medium">
+                  {service.id.length > 10 ? service.id.slice(0, 10) + "..." : service.id}
+                </TableCell>
                 <TableCell>
                   <div className="flex flex-col">
                     <span>{service.user}</span>
@@ -163,7 +165,7 @@ const orders = useQuery(api.orders.getAllOrders) || [];
                   </div>
                 </TableCell>
                 <TableCell>{formatDate(service.registeredDate)}</TableCell>
-                <TableCell>Chưa có</TableCell>
+                <TableCell>{formatDate(service.expiryDate)}</TableCell>
                 <TableCell>{service.plan}</TableCell>
                 <TableCell>
                   <Badge variant="outline" className={getStatusBadgeVariant(service.status)}>
