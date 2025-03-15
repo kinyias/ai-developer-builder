@@ -15,72 +15,78 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Card, CardContent } from "@/components/ui/card"
 
+//import cac ham lien quan convex
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
+//import { getAllUsers } from "../../../convex/users"; // Import hàm getAllUsers từ file users.js
+import { findPlanByTokens } from "../../../convex/orders";
+
 // Sample data for registered services
-const services = [
-  {
-    id: "SRV-001",
-    user: "Sarah Johnson",
-    email: "sarah@example.com",
-    registeredDate: "2023-12-10",
-    expiryDate: "2024-12-10",
-    status: "active",
-    plan: "Enterprise",
-  },
-  {
-    id: "SRV-002",
-    user: "Michael Brown",
-    email: "michael@example.com",
-    registeredDate: "2023-11-15",
-    expiryDate: "2024-11-15",
-    status: "active",
-    plan: "Pro",
-  },
-  {
-    id: "SRV-003",
-    user: "Emily Davis",
-    email: "emily@example.com",
-    registeredDate: "2023-12-05",
-    expiryDate: "2024-12-05",
-    status: "pending",
-    plan: "Enterprise",
-  },
-  {
-    id: "SRV-004",
-    user: "Robert Wilson",
-    email: "robert@example.com",
-    registeredDate: "2023-10-20",
-    expiryDate: "2024-10-20",
-    status: "active",
-    plan: "Pro",
-  },
-  {
-    id: "SRV-005",
-    user: "Jennifer Taylor",
-    email: "jennifer@example.com",
-    registeredDate: "2023-09-30",
-    expiryDate: "2024-09-30",
-    status: "suspended",
-    plan: "Basic",
-  },
-  {
-    id: "SRV-006",
-    user: "David Miller",
-    email: "david@example.com",
-    registeredDate: "2023-11-25",
-    expiryDate: "2024-11-25",
-    status: "active",
-    plan: "Enterprise",
-  },
-  {
-    id: "SRV-007",
-    user: "Lisa Anderson",
-    email: "lisa@example.com",
-    registeredDate: "2023-12-01",
-    expiryDate: "2024-12-01",
-    status: "pending",
-    plan: "Pro",
-  },
-]
+// const services = [
+//   {
+//     id: "SRV-001",
+//     user: "Sarah Johnson",
+//     email: "sarah@example.com",
+//     registeredDate: "2023-12-10",
+//     expiryDate: "2024-12-10",
+//     status: "active",
+//     plan: "Enterprise",
+//   },
+//   {
+//     id: "SRV-002",
+//     user: "Michael Brown",
+//     email: "michael@example.com",
+//     registeredDate: "2023-11-15",
+//     expiryDate: "2024-11-15",
+//     status: "active",
+//     plan: "Pro",
+//   },
+//   {
+//     id: "SRV-003",
+//     user: "Emily Davis",
+//     email: "emily@example.com",
+//     registeredDate: "2023-12-05",
+//     expiryDate: "2024-12-05",
+//     status: "pending",
+//     plan: "Enterprise",
+//   },
+//   {
+//     id: "SRV-004",
+//     user: "Robert Wilson",
+//     email: "robert@example.com",
+//     registeredDate: "2023-10-20",
+//     expiryDate: "2024-10-20",
+//     status: "active",
+//     plan: "Pro",
+//   },
+//   {
+//     id: "SRV-005",
+//     user: "Jennifer Taylor",
+//     email: "jennifer@example.com",
+//     registeredDate: "2023-09-30",
+//     expiryDate: "2024-09-30",
+//     status: "suspended",
+//     plan: "Basic",
+//   },
+//   {
+//     id: "SRV-006",
+//     user: "David Miller",
+//     email: "david@example.com",
+//     registeredDate: "2023-11-25",
+//     expiryDate: "2024-11-25",
+//     status: "active",
+//     plan: "Enterprise",
+//   },
+//   {
+//     id: "SRV-007",
+//     user: "Lisa Anderson",
+//     email: "lisa@example.com",
+//     registeredDate: "2023-12-01",
+//     expiryDate: "2024-12-01",
+//     status: "pending",
+//     plan: "Pro",
+//   },
+// ]
 
 // Format date for display
 const formatDate = (dateString) => {
@@ -93,6 +99,25 @@ const formatDate = (dateString) => {
 }
 
 export default function AdminServicesTable() {
+  const users = useQuery(api.users.getAllUsers) || [];
+const orders = useQuery(api.orders.getAllOrders) || [];
+
+  if (!users || !orders) return <div>Loading...</div>;
+
+  // Map user data with their orders
+  const services = orders.map((order) => {
+    const user = users.find((u) => u._id === order.userId);
+    return {
+      id: order._id,
+      user: user?.name || "Unknown",
+      email: user?.email || "N/A",
+      registeredDate: order.createdAt,
+      // expiryDate: "Chưa xử lý", // TODO: Tính ngày hết hạn
+      plan: findPlanByTokens(order.amount),
+      // status: order.status || "Chưa xử lý", // TODO: Kiểm tra trạng thái từ đơn hàng
+    };
+  });
+
   const [page, setPage] = useState(1)
   const itemsPerPage = 5
   const totalPages = Math.ceil(services.length / itemsPerPage)
@@ -111,7 +136,7 @@ export default function AdminServicesTable() {
         return "bg-gray-100 text-gray-800"
     }
   }
-
+  
   return (
     <Card>
       <CardContent className="p-0">
@@ -128,7 +153,7 @@ export default function AdminServicesTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {paginatedServices.map((service) => (
+            {services.map((service) => (
               <TableRow key={service.id}>
                 <TableCell className="font-medium">{service.id}</TableCell>
                 <TableCell>
@@ -138,11 +163,12 @@ export default function AdminServicesTable() {
                   </div>
                 </TableCell>
                 <TableCell>{formatDate(service.registeredDate)}</TableCell>
-                <TableCell>{formatDate(service.expiryDate)}</TableCell>
+                <TableCell>Chưa có</TableCell>
                 <TableCell>{service.plan}</TableCell>
                 <TableCell>
                   <Badge variant="outline" className={getStatusBadgeVariant(service.status)}>
-                    {service.status.charAt(0).toUpperCase() + service.status.slice(1)}
+                    Chưa có
+                    {/* {service.status.charAt(0).toUpperCase() + service.status.slice(1)} */}
                   </Badge>
                 </TableCell>
                 <TableCell className="text-right">

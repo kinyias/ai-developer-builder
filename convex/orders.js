@@ -157,3 +157,13 @@ export const searchOrdersByEmail = query({
     }));
   },
 });
+//lay tat ca don hang
+export const getAllOrders = query(async ({ db }) => {
+  return await db.query("orders").collect();
+});
+
+//dua vao pricing data lay plan
+export const findPlanByTokens = (tokens) => {
+  const plan = LOOKUP_DATA.PRICING_OPTIONS.find(p => parseInt(p.tokens.replace("K", "000")) === tokens);
+  return plan ? plan.name : "Miễn phí";
+};

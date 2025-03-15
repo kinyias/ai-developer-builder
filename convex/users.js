@@ -71,3 +71,8 @@ export const getTotalCustomers = query(async ({ db }) => {
   const users = await db.query("users").count(); // Lấy tất cả user
   return users; // Trả về tổng số user
 });
+
+//lay tat ca user
+export const getAllUsers = query(async ({ db }) => {
+  return await db.query("users").collect();
+});
