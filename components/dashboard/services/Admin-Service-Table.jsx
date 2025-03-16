@@ -98,7 +98,7 @@ const formatDate = (dateString) => {
   })
 }
 
-export default function AdminServicesTable() {
+export default function AdminServicesTable({searchResults=[]}) {
   const users = useQuery(api.users.getAllUsers) || [];
 const orders = useQuery(api.orders.getAllOrders) || [];
 
@@ -137,7 +137,7 @@ const orders = useQuery(api.orders.getAllOrders) || [];
     }
   };
 
-  const displayData = searchResults.length > 0 ? searchResults : usersWithOrders;
+  const displayData = searchResults.length > 0 ? searchResults : services;
   if (!users && !orders && searchResults.length === 0) return <div>Loading...</div>;
 
   return (
