@@ -2,6 +2,7 @@ import { query } from "./_generated/server"; // CẦN IMPORT query!
 import LOOKUP_DATA from "../data/Lookup"
 import { mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { action } from "./_generated/server";
 
 export const CreateOrder = mutation({
   args: {
@@ -135,28 +136,35 @@ export const checkAndDeductExpiredTokens = mutation(async ({ db }) => {
 });
 
 
-// ✅ Tìm kiếm dịch vụ đã đăng ký theo email
-export const searchOrdersByEmail = query({
+//// Tìm kiếm dịch vụ đã đăng ký theo email người dùng
+export const searchOrdersByEmail = mutation({
   args: { email: v.string() },
   handler: async (ctx, args) => {
-    const users = await ctx.db.query("users").filter(q => q.eq(q.field("email"), args.email)).collect();
-    if (users.length === 0) {
-      return [];
-    }
-    
-    const user = users[0];
-    const orders = await ctx.db.query("orders").filter(q => q.eq(q.field("userId"), user._id)).collect();
-    
-    return orders.map(order => ({
-      user: user.name,
-      email: user.email,
-      registeredDate: order.createdAt,
-      expiryDate: order.expiryDate,
-      status: order.status,
-      amount: order.amount,
-    }));
+    const users = await ctx.db.query("users").collect();
+    const matchedUsers = users.filter(user => user.email.toLowerCase().includes(args.email.toLowerCase()));
+
+    if (matchedUsers.length === 0) return [];
+
+    const userIds = matchedUsers.map(user => user._id);
+    const orders = await ctx.db.query("orders").collect();
+    const matchedOrders = orders.filter(order => userIds.includes(order.userId));
+
+    return matchedOrders.map(order => {
+      const user = matchedUsers.find(u => u._id === order.userId);
+      return {
+        _id: user?._id || "N/A",
+        user: user?.name || "Unknown",
+        email: user?.email || "N/A",
+        registeredDate: order.createdAt,
+        expiryDate: order.expiryDate,
+        status: order.status,
+        amount: order.amount,
+      };
+    });
   },
 });
+
+
 //lay tat ca don hang
 export const getAllOrders = query(async ({ db }) => {
   return await db.query("orders").collect();

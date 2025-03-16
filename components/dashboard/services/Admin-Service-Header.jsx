@@ -11,13 +11,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-
+import { useMutation } from 'convex/react';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 
 export default function AdminServicesHeader({ setSearchResults }) {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState('all');
+
+   // Sử dụng useMutation để gọi searchOrdersByEmail
+   const searchOrders = useMutation(api.orders.searchOrdersByEmail);
 
   const handleSearch = async () => {
     if (!email) {
@@ -26,9 +29,9 @@ export default function AdminServicesHeader({ setSearchResults }) {
     }
 
     try {
-      // ✅ Gọi API để tìm đơn hàng theo email
-      const orders = await api.orders.searchOrdersByEmail({ email });
-      setSearchResults(orders);
+       // Gọi mutation với email
+       const orders = await searchOrders({ email });
+       setSearchResults(orders);
       console.log("✅ Kết quả tìm kiếm:", orders);
     } catch (error) {
       console.error("❌ Lỗi khi tìm kiếm đơn hàng:", error);

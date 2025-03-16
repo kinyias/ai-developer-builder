@@ -36,7 +36,7 @@ const formatDate = (dateString) => {
   });
 };
 
-export default function AdminServicesTable() {
+export default function AdminServicesTable({ searchResults = [] }) {
   // Pagination state
   const [cursor, setCursor] = useState(null);
   const itemsPerPage = 5;
@@ -61,7 +61,8 @@ export default function AdminServicesTable() {
     }
   };
 
-  if (!usersWithOrders) return <div>Loading...</div>;
+  const displayData = searchResults.length > 0 ? searchResults : usersWithOrders;
+  if (!usersWithOrders && searchResults.length === 0) return <div>Loading...</div>;
 
   return (
     <Card>
@@ -79,42 +80,58 @@ export default function AdminServicesTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {usersWithOrders.map((service) => (
-              <TableRow key={service._id}>
+            {displayData.map((service, index) => (
+              <TableRow key={service._id || index}>
                 <TableCell className="font-medium">
-                  {service._id.length > 10
+                  {/* {service._id.length > 10
                     ? service._id.slice(0, 10) + '...'
-                    : service._id}
+                    : service._id} */}
+                  {service._id
+                    ? service._id.length > 10
+                    ? service._id.slice(0, 10) + '...'
+                    : service._id
+                    : 'N/A'}
                 </TableCell>
                 <TableCell>
                   <div className="flex flex-col">
-                    <span>{service.name}</span>
+                    <span>{service.user || service.name}</span>
                     <span className="text-xs text-muted-foreground">
                       {service.email}
                     </span>
                   </div>
                 </TableCell>
                 <TableCell>
-                  {service.orders[0]
+                  {/* {service.orders[0]
                     ? formatDate(service.orders[0].createdAt)
+                    : 'N/A'} */}
+                  {service.registeredDate || (service.orders && service.orders[0]?.createdAt)
+                    ? formatDate(service.registeredDate || service.orders[0].createdAt)
                     : 'N/A'}
                 </TableCell>
                 <TableCell>
-                  {service.orders[0]
+                  {/* {service.orders[0]
                     ? formatDate(service.orders[0].expiryDate)
+                    : 'N/A'} */}
+                  {service.expiryDate || (service.orders && service.orders[0]?.expiryDate)
+                    ? formatDate(service.expiryDate || service.orders[0].expiryDate)
                     : 'N/A'}
                 </TableCell>
                 <TableCell>
-                  {service.orders[0]
+                  {/* {service.orders[0]
                     ? findPlanByPrice(service.orders[0].amount)
+                    : 'N/A'} */}
+                  {service.amount || (service.orders && service.orders[0]?.amount)
+                    ? findPlanByPrice(service.amount || service.orders[0].amount)
                     : 'N/A'}
                 </TableCell>
                 <TableCell>
                   <Badge
                     variant="outline"
-                    className={getStatusBadgeVariant(service.orders[0]?.status)}
+                    // className={getStatusBadgeVariant(service.orders[0]?.status)}
+                    className={getStatusBadgeVariant(service.status || (service.orders && service.orders[0]?.status))}
                   >
-                    {service.orders[0]?.status || 'Chưa có'}
+                    {/* {service.orders[0]?.status || 'Chưa có'} */}
+                    {service.status || (service.orders && service.orders[0]?.status) || 'Chưa có'}
                   </Badge>
                 </TableCell>
                 <TableCell className="text-right">
@@ -152,7 +169,7 @@ export default function AdminServicesTable() {
               variant="outline"
               size="sm"
               onClick={() => setCursor(null)} // Reset cursor to go back to the first page
-              disabled={!cursor}
+              disabled={!cursor || searchResults.length > 0}
             >
               <ChevronLeft className="h-4 w-4" />
               <span className="sr-only">Trước</span>
@@ -161,7 +178,7 @@ export default function AdminServicesTable() {
               variant="outline"
               size="sm"
               onClick={() => setCursor(nextCursor)} // Set cursor to fetch the next page
-              disabled={!nextCursor}
+              disabled={!nextCursor || searchResults.length > 0}
             >
               <ChevronRight className="h-4 w-4" />
               <span className="sr-only">Sau</span>
