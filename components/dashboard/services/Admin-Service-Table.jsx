@@ -21,73 +21,6 @@ import { api } from "../../../convex/_generated/api";
 //import { getAllUsers } from "../../../convex/users"; // Import hàm getAllUsers từ file users.js
 import { findPlanByPrice } from "../../../convex/orders";
 
-// Sample data for registered services
-// const services = [
-//   {
-//     id: "SRV-001",
-//     user: "Sarah Johnson",
-//     email: "sarah@example.com",
-//     registeredDate: "2023-12-10",
-//     expiryDate: "2024-12-10",
-//     status: "active",
-//     plan: "Enterprise",
-//   },
-//   {
-//     id: "SRV-002",
-//     user: "Michael Brown",
-//     email: "michael@example.com",
-//     registeredDate: "2023-11-15",
-//     expiryDate: "2024-11-15",
-//     status: "active",
-//     plan: "Pro",
-//   },
-//   {
-//     id: "SRV-003",
-//     user: "Emily Davis",
-//     email: "emily@example.com",
-//     registeredDate: "2023-12-05",
-//     expiryDate: "2024-12-05",
-//     status: "pending",
-//     plan: "Enterprise",
-//   },
-//   {
-//     id: "SRV-004",
-//     user: "Robert Wilson",
-//     email: "robert@example.com",
-//     registeredDate: "2023-10-20",
-//     expiryDate: "2024-10-20",
-//     status: "active",
-//     plan: "Pro",
-//   },
-//   {
-//     id: "SRV-005",
-//     user: "Jennifer Taylor",
-//     email: "jennifer@example.com",
-//     registeredDate: "2023-09-30",
-//     expiryDate: "2024-09-30",
-//     status: "suspended",
-//     plan: "Basic",
-//   },
-//   {
-//     id: "SRV-006",
-//     user: "David Miller",
-//     email: "david@example.com",
-//     registeredDate: "2023-11-25",
-//     expiryDate: "2024-11-25",
-//     status: "active",
-//     plan: "Enterprise",
-//   },
-//   {
-//     id: "SRV-007",
-//     user: "Lisa Anderson",
-//     email: "lisa@example.com",
-//     registeredDate: "2023-12-01",
-//     expiryDate: "2024-12-01",
-//     status: "pending",
-//     plan: "Pro",
-//   },
-// ]
-
 // Format date for display
 const formatDate = (dateString) => {
   const date = new Date(dateString)
@@ -122,22 +55,22 @@ export default function AdminServicesTable({searchResults=[]}) {
   const itemsPerPage = 5
   const totalPages = Math.ceil(services.length / itemsPerPage)
 
-  const paginatedServices = services.slice((page - 1) * itemsPerPage, page * itemsPerPage)
-
+  
   const getStatusBadgeVariant = (status) => {
     switch (status) {
       case "active":
         return "bg-green-100 text-green-800"
-      case "pending":
-        return "bg-yellow-100 text-yellow-800"
-      case "suspended":
-        return "bg-red-100 text-red-800"
-      default:
-        return "bg-gray-100 text-gray-800"
-    }
-  };
-
+        case "pending":
+          return "bg-yellow-100 text-yellow-800"
+          case "suspended":
+            return "bg-red-100 text-red-800"
+            default:
+              return "bg-gray-100 text-gray-800"
+            }
+          };
+          
   const displayData = searchResults.length > 0 ? searchResults : services;
+  const paginatedServices = displayData.slice((page - 1) * itemsPerPage, page * itemsPerPage)
   if (!users && !orders && searchResults.length === 0) return <div>Loading...</div>;
 
   return (
@@ -156,16 +89,16 @@ export default function AdminServicesTable({searchResults=[]}) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {displayData.map((service, index) => (
-              <TableRow key={service.orderId || service._id || index}>
+            {paginatedServices.map((service, index) => (
+              <TableRow key={ service.id || index}>
                 <TableCell className="font-medium">
                   {/* {service._id.length > 10
                     ? service._id.slice(0, 10) + '...'
                     : service._id} */}
-                  {(service.userId || service._id)
-                    ? (service.userId || service._id).length > 10
-                      ? (service.userId || service._id).slice(0, 10) + '...'
-                      : (service.userId || service._id)
+                  {service.id
+                    ? service.id.length > 10
+                    ? service.id.slice(0, 10) + '...'
+                    : service.id
                     : 'N/A'}
                 </TableCell>
                 <TableCell>
