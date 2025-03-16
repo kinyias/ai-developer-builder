@@ -156,16 +156,21 @@ const orders = useQuery(api.orders.getAllOrders) || [];
             </TableRow>
           </TableHeader>
           <TableBody>
-            {usersWithOrders.map((service) => (
-              <TableRow key={service._id}>
+            {displayData.map((service, index) => (
+              <TableRow key={service._id || index}>
                 <TableCell className="font-medium">
-                  {service._id.length > 10
+                  {/* {service._id.length > 10
                     ? service._id.slice(0, 10) + '...'
-                    : service._id}
+                    : service._id} */}
+                  {service._id
+                    ? service._id.length > 10
+                    ? service._id.slice(0, 10) + '...'
+                    : service._id
+                    : 'N/A'}
                 </TableCell>
                 <TableCell>
                   <div className="flex flex-col">
-                    <span>{service.name}</span>
+                    <span>{service.user || service.name}</span>
                     <span className="text-xs text-muted-foreground">
                       {service.email}
                     </span>
@@ -175,26 +180,37 @@ const orders = useQuery(api.orders.getAllOrders) || [];
                 <TableCell>{formatDate(service.expiryDate)}</TableCell>
                 <TableCell>{service.plan}</TableCell>
                 <TableCell>
-                  {service.orders[0]
+                  {/* {service.orders[0]
                     ? formatDate(service.orders[0].createdAt)
+                    : 'N/A'} */}
+                  {service.registeredDate || (service.orders && service.orders[0]?.createdAt)
+                    ? formatDate(service.registeredDate || service.orders[0].createdAt)
                     : 'N/A'}
                 </TableCell>
                 <TableCell>
-                  {service.orders[0]
+                  {/* {service.orders[0]
                     ? formatDate(service.orders[0].expiryDate)
+                    : 'N/A'} */}
+                  {service.expiryDate || (service.orders && service.orders[0]?.expiryDate)
+                    ? formatDate(service.expiryDate || service.orders[0].expiryDate)
                     : 'N/A'}
                 </TableCell>
                 <TableCell>
-                  {service.orders[0]
+                  {/* {service.orders[0]
                     ? findPlanByPrice(service.orders[0].amount)
+                    : 'N/A'} */}
+                  {service.amount || (service.orders && service.orders[0]?.amount)
+                    ? findPlanByPrice(service.amount || service.orders[0].amount)
                     : 'N/A'}
                 </TableCell>
                 <TableCell>
                   <Badge
                     variant="outline"
-                    className={getStatusBadgeVariant(service.orders[0]?.status)}
+                    // className={getStatusBadgeVariant(service.orders[0]?.status)}
+                    className={getStatusBadgeVariant(service.status || (service.orders && service.orders[0]?.status))}
                   >
-                    {service.orders[0]?.status || 'Chưa có'}
+                    {/* {service.orders[0]?.status || 'Chưa có'} */}
+                    {service.status || (service.orders && service.orders[0]?.status) || 'Chưa có'}
                   </Badge>
                 </TableCell>
                 <TableCell className="text-right">
