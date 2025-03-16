@@ -152,7 +152,8 @@ export const searchOrdersByEmail = mutation({
     return matchedOrders.map(order => {
       const user = matchedUsers.find(u => u._id === order.userId);
       return {
-        _id: user?._id || "N/A",
+        userId: order.userId, // ID của user để hiển thị trong cột ID
+        orderId: order._id, // ID của order để dùng làm key
         user: user?.name || "Unknown",
         email: user?.email || "N/A",
         registeredDate: order.createdAt,

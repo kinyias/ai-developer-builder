@@ -100,7 +100,7 @@ const formatDate = (dateString) => {
 
 export default function AdminServicesTable({searchResults=[]}) {
   const users = useQuery(api.users.getAllUsers) || [];
-const orders = useQuery(api.orders.getAllOrders) || [];
+  const orders = useQuery(api.orders.getAllOrders) || [];
 
   if (!users || !orders) return <div>Loading...</div>;
 
@@ -157,15 +157,15 @@ const orders = useQuery(api.orders.getAllOrders) || [];
           </TableHeader>
           <TableBody>
             {displayData.map((service, index) => (
-              <TableRow key={service._id || index}>
+              <TableRow key={service.orderId || service._id || index}>
                 <TableCell className="font-medium">
                   {/* {service._id.length > 10
                     ? service._id.slice(0, 10) + '...'
                     : service._id} */}
-                  {service._id
-                    ? service._id.length > 10
-                    ? service._id.slice(0, 10) + '...'
-                    : service._id
+                  {(service.userId || service._id)
+                    ? (service.userId || service._id).length > 10
+                      ? (service.userId || service._id).slice(0, 10) + '...'
+                      : (service.userId || service._id)
                     : 'N/A'}
                 </TableCell>
                 <TableCell>
