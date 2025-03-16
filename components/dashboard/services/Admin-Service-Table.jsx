@@ -47,6 +47,7 @@ export default function AdminServicesTable({searchResults=[]}) {
       registeredDate: order.createdAt,
       expiryDate: order.expiryDate, // TODO: Tính ngày hết hạn
       plan: findPlanByPrice(order.amount),
+      amount: order.amount,
       // status: order.status || "Chưa xử lý", // TODO: Kiểm tra trạng thái từ đơn hàng
     };
   });
@@ -90,15 +91,15 @@ export default function AdminServicesTable({searchResults=[]}) {
           </TableHeader>
           <TableBody>
             {paginatedServices.map((service, index) => (
-              <TableRow key={ service.id || index}>
+                <TableRow key={service.orderId || service.id || index}>
                 <TableCell className="font-medium">
                   {/* {service._id.length > 10
                     ? service._id.slice(0, 10) + '...'
                     : service._id} */}
-                  {service.id
-                    ? service.id.length > 10
-                    ? service.id.slice(0, 10) + '...'
-                    : service.id
+                  {(service.userId || service.id)
+                    ? (service.userId || service.id).length > 10
+                      ? (service.userId || service.id).slice(0, 10) + '...'
+                      : (service.userId || service.id)
                     : 'N/A'}
                 </TableCell>
                 <TableCell>
@@ -125,7 +126,11 @@ export default function AdminServicesTable({searchResults=[]}) {
                     ? formatDate(service.expiryDate || service.orders[0].expiryDate)
                     : 'N/A'}
                 </TableCell>
-                    <TableCell>{service.plan}</TableCell>
+                <TableCell>
+                  {service.amount || (service.orders && service.orders[0]?.amount)
+                    ? findPlanByPrice(service.amount || service.orders[0].amount)
+                    : 'N/A'}
+                </TableCell>
                 <TableCell>
                   <Badge
                     variant="outline"
