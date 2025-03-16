@@ -109,9 +109,6 @@ export default function AdminServicesTable({searchResults=[]}) {
                     </span>
                   </div>
                 </TableCell>
-                <TableCell>{formatDate(service.registeredDate)}</TableCell>
-                <TableCell>{formatDate(service.expiryDate)}</TableCell>
-                <TableCell>{service.plan}</TableCell>
                 <TableCell>
                   {/* {service.orders[0]
                     ? formatDate(service.orders[0].createdAt)
@@ -128,14 +125,7 @@ export default function AdminServicesTable({searchResults=[]}) {
                     ? formatDate(service.expiryDate || service.orders[0].expiryDate)
                     : 'N/A'}
                 </TableCell>
-                <TableCell>
-                  {/* {service.orders[0]
-                    ? findPlanByPrice(service.orders[0].amount)
-                    : 'N/A'} */}
-                  {service.amount || (service.orders && service.orders[0]?.amount)
-                    ? findPlanByPrice(service.amount || service.orders[0].amount)
-                    : 'N/A'}
-                </TableCell>
+                    <TableCell>{service.plan}</TableCell>
                 <TableCell>
                   <Badge
                     variant="outline"
