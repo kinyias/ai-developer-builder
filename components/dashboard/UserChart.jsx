@@ -10,18 +10,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 // Sample data for user growth
 const userGrowthData = [
-  { date: "2023-01-01", newUsers: 120, totalUsers: 800, churnedUsers: 20, growthRate: 12.5 },
-  { date: "2023-02-01", newUsers: 180, totalUsers: 950, churnedUsers: 30, growthRate: 18.8 },
-  { date: "2023-03-01", newUsers: 150, totalUsers: 1100, churnedUsers: 25, growthRate: 15.8 },
-  { date: "2023-04-01", newUsers: 220, totalUsers: 1250, churnedUsers: 40, growthRate: 13.6 },
-  { date: "2023-05-01", newUsers: 250, totalUsers: 1400, churnedUsers: 45, growthRate: 12.0 },
-  { date: "2023-06-01", newUsers: 280, totalUsers: 1600, churnedUsers: 50, growthRate: 14.3 },
-  { date: "2023-07-01", newUsers: 300, totalUsers: 1850, churnedUsers: 55, growthRate: 15.6 },
-  { date: "2023-08-01", newUsers: 280, totalUsers: 2000, churnedUsers: 60, growthRate: 8.1 },
-  { date: "2023-09-01", newUsers: 320, totalUsers: 2200, churnedUsers: 65, growthRate: 10.0 },
-  { date: "2023-10-01", newUsers: 350, totalUsers: 2400, churnedUsers: 70, growthRate: 9.1 },
-  { date: "2023-11-01", newUsers: 380, totalUsers: 2600, churnedUsers: 75, growthRate: 8.3 },
-  { date: "2023-12-01", newUsers: 450, totalUsers: 3000, churnedUsers: 80, growthRate: 15.4 },
+  { date: "2023-01-01", newUsers: 120, totalUsers: 800, growthRate: 12.5 },
+  { date: "2023-02-01", newUsers: 180, totalUsers: 950, growthRate: 18.8 },
+  { date: "2023-03-01", newUsers: 150, totalUsers: 1100, growthRate: 15.8 },
+  { date: "2023-04-01", newUsers: 220, totalUsers: 1250, growthRate: 13.6 },
+  { date: "2023-05-01", newUsers: 250, totalUsers: 1400, growthRate: 12.0 },
+  { date: "2023-06-01", newUsers: 280, totalUsers: 1600, growthRate: 14.3 },
+  { date: "2023-07-01", newUsers: 300, totalUsers: 1850, growthRate: 15.6 },
+  { date: "2023-08-01", newUsers: 280, totalUsers: 2000, growthRate: 8.1 },
+  { date: "2023-09-01", newUsers: 320, totalUsers: 2200, growthRate: 10.0 },
+  { date: "2023-10-01", newUsers: 350, totalUsers: 2400,growthRate: 9.1 },
+  { date: "2023-11-01", newUsers: 380, totalUsers: 2600, growthRate: 8.3 },
+  { date: "2023-12-01", newUsers: 450, totalUsers: 3000,  growthRate: 15.4 },
 ]
 
 // Chart configurations
@@ -33,10 +33,6 @@ const userGrowthChartConfig = {
   newUsers: {
     label: "New Users",
     color: "hsl(var(--chart-2))",
-  },
-  churnedUsers: {
-    label: "Churned Users",
-    color: "hsl(var(--chart-3))",
   },
 }
 
@@ -135,13 +131,6 @@ export default function UserChart() {
                   fillOpacity={1}
                   fill="url(#colorNewUsers)"
                   strokeWidth={2}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="churnedUsers"
-                  stroke="hsl(var(--chart-3))"
-                  strokeWidth={2}
-                  dot={{ r: 4 }}
                 />
                 <Legend />
               </AreaChart>

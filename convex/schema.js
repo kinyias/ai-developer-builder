@@ -17,6 +17,7 @@ export default defineSchema({ //bảng user
         status: v.string(),
         createdAt: v.string(),
         transId: v.optional(v.string()), // ✅ Mã giao dịch Momo
+        expiryDate: v.optional(v.string())
     }),
     workspace:defineTable({
         messages:v.any(),

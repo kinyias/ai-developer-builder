@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { BarChart3, Users, Package, Settings, HelpCircle, LayoutDashboard, LogOut, PlusCircle } from "lucide-react"
+import { BarChart3, Users, Package, Settings, HelpCircle, LayoutDashboard, LogOut, PlusCircle, Server } from "lucide-react"
 
 import {
   Sidebar,
@@ -81,6 +81,14 @@ export default function DashboardSidebar() {
               <Link href="/dashboard/products">
                 <Package className="h-4 w-4" />
                 <span>Products</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild>
+              <Link href="/dashboard/services">
+                <Server className="h-4 w-4" />
+                <span>Services</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

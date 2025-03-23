@@ -12,7 +12,7 @@ export default function Workspage({ }) {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
         <SidebarProvider defaultOpen={false} > 
           <AppSideBar />
-          <SidebarTrigger/>
+       
           <ChatView />
         </SidebarProvider>
         <div className="col-span-2">

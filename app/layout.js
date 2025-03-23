@@ -42,7 +42,6 @@ export default function RootLayout({ children }) {
       <html lang="en" suppressHydrationWarning>
         <body className={`${beVietnamPro.className} antialiased`}>
           <ActionContext.Provider value={{ action, setAction }}>
-            <Header/>
             <ThemeProvider
               attribute="class"
               defaultTheme="light"

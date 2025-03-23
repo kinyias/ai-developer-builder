@@ -91,7 +91,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col h-full w-full ">
-      <div className="min-h-screen bg-background text-foreground flex flex-col">
+      <div className="h-full bg-background text-foreground flex flex-col">
         {/* Main Content */}
         <main className="relative flex-1 flex flex-col items-center justify-center p-4 max-w-4xl mx-auto w-full text-center z-10">
           <h1 className="text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500">
@@ -164,30 +164,8 @@ export default function Home() {
             </div>
           </div>
         </main>
+      
         
-        {/* Footer */}
-        <footer className="relative border-t p-4 text-sm text-muted-foreground">
-          <div className="flex items-center justify-between max-w-7xl mx-auto">
-            <div className="flex items-center gap-4">
-              <Button variant="link" size="sm">
-              <Link href="/pricing">Go to Pricing</Link>
-              </Button>
-              <Button variant="link" size="sm">
-                Link
-              </Button>
-              <Button variant="link" size="sm">
-                Link
-              </Button>
-              <Button variant="link" size="sm">
-                Link
-              </Button>
-            </div>
-            <div className="flex items-center gap-2">
-              <Zap className="w-4 h-4 text-yellow-500 dark:text-yellow-300" />
-              <span className="font-semibold">Nhóm 4</span>
-            </div>
-          </div>
-        </footer>
       </div>
     </div>
   );

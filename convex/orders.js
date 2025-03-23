@@ -1,47 +1,9 @@
-
-// import { mutation } from "./_generated/server";
-// import { v } from "convex/values";
-
-// // ✅ Mutation để tạo order
-// export const CreateOrder = mutation({
-//   args: {
-//     userId: v.id("users"),
-//     amount: v.number(),
-//     currencyCode: v.string(),
-//     status: v.string(),
-//     createdAt: v.optional(v.string()),
-//     transId: v.optional(v.string()),
-//   },
-//   handler: async (ctx, args) => {
-//     console.log("🔹 Đang tạo order cho userId:", args.userId);
-
-//     // ✅ Kiểm tra user có tồn tại không
-//     const user = await ctx.db.get(args.userId);
-//     if (!user) {
-//       console.error("❌ User không tồn tại với _id:", args.userId);
-//       throw new Error("User không tồn tại!");
-//     }
-
-//     // ✅ Tạo đơn hàng
-//     const order = await ctx.db.insert("orders", {
-//       userId: args.userId,
-//       amount: args.amount,
-//       currencyCode: args.currencyCode,
-//       status: args.status,
-//       createdAt: args.createdAt || new Date().toISOString(),
-//       transId: args.transId || null,
-//     });
-
-//     console.log("✅ Đơn hàng đã tạo:", order);
-//     return order;
-//   },
-// });
-
-///test
 import { query } from "./_generated/server"; // CẦN IMPORT query!
 import LOOKUP_DATA from "../data/Lookup"
 import { mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { action } from "./_generated/server";
+
 export const CreateOrder = mutation({
   args: {
     userId: v.id("users"),  // ✅ Dùng v.id("users")
@@ -50,12 +12,17 @@ export const CreateOrder = mutation({
     status: v.string(),
     createdAt: v.optional(v.string()),
     transId: v.optional(v.string()),  
+    expiryDate: v.optional(v.string()),  // ✅ Thêm ngày hết hạn
   },
   handler: async (ctx, args) => {
     const user = await ctx.db.get(args.userId);
     if (!user) {
       throw new Error("User không tồn tại!");
     }
+
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + 30);
+    const expiryDateString = expiryDate.toISOString();
 
     const order = await ctx.db.insert("orders", {
       userId: args.userId,
@@ -64,6 +31,7 @@ export const CreateOrder = mutation({
       status: args.status,
       createdAt: args.createdAt || new Date().toISOString(),
       transId: args.transId || null,
+      expiryDate: expiryDateString, 
     });
 
     return order;
@@ -102,11 +70,11 @@ export const getLatestCustomers = query(async ({ db }) => {
 
   console.log("🔹 Đơn hàng mới nhất:", latestOrders);
 
-  // Hàm tìm plan theo số token (amount)
-  const findPlanByTokens = (tokens) => {
-    const plan = LOOKUP_DATA.PRICING_OPTIONS.find(p => parseInt(p.tokens.replace("K", "000")) === tokens);
-    return plan ? plan.name : "Miễn phí";
-  };
+  // Hàm tìm plan
+  // const findPlanByPrice = (price) => {
+  //   const plan = LOOKUP_DATA.PRICING_OPTIONS.find(p => Math.floor(p.price_f) === Math.floor(price));
+  //   return plan ? plan.name : "Miễn phí";
+  // };
 
   // Lấy thông tin user + plan từ order
   const customers = await Promise.all(
@@ -114,7 +82,7 @@ export const getLatestCustomers = query(async ({ db }) => {
       const user = await db.get(order.userId);
       return {
         name: user?.name || "Unknown",
-        plan: findPlanByTokens(order.amount), // Tìm gói theo số token
+        plan: findPlanByPrice(order.amount), // Tìm gói t
       };
     })
   );
@@ -132,6 +100,80 @@ export const getTotalRevenue = query(async ({ db }) => {
 
 // Tổng số lượng đơn hàng
 export const getTotalOrders = query(async ({ db }) => {
-  const totalOrders = await db.query("orders").collect();
-  return totalOrders.length;
+  return await db.query("orders").count();
 });
+
+// Kiểm tra và trừ token nếu hết hạn
+export const checkAndDeductExpiredTokens = mutation(async ({ db }) => {
+  const now = new Date();
+  
+  // ✅ Lấy tất cả đơn hàng chưa hết hạn
+  const validOrders = await db.query("orders")
+    .filter(q => q.gte(q.field("expiryDate"), now.toISOString())) // Lọc đơn hàng còn hạn
+    .collect();
+
+  // ✅ Lấy tất cả user có đơn hàng hết hạn
+  const expiredOrders = await db.query("orders")
+    .filter(q => q.lt(q.field("expiryDate"), now.toISOString())) // Lọc đơn hàng hết hạn
+    .collect();
+
+  const affectedUsers = new Set(expiredOrders.map(order => order.userId));
+
+  for (const userId of affectedUsers) {
+    const user = await db.get(userId);
+    if (user) {
+      // ✅ Tính tổng token từ các đơn hàng còn hạn
+      const remainingToken = validOrders
+        .filter(order => order.userId === userId)
+        .reduce((sum, order) => sum + order.amount, 0);
+
+      // ✅ Cập nhật token
+      await db.patch(userId, { token: remainingToken });
+
+      console.log(`✅ Đã cập nhật token cho user: ${user.name}, Số token còn lại: ${remainingToken}`);
+    }
+  }
+});
+
+
+//// Tìm kiếm dịch vụ đã đăng ký theo email người dùng
+export const searchOrdersByEmail = mutation({
+  args: { email: v.string() },
+  handler: async (ctx, args) => {
+    const users = await ctx.db.query("users").collect();
+    const matchedUsers = users.filter(user => user.email.toLowerCase().includes(args.email.toLowerCase()));
+
+    if (matchedUsers.length === 0) return [];
+
+    const userIds = matchedUsers.map(user => user._id);
+    const orders = await ctx.db.query("orders").collect();
+    const matchedOrders = orders.filter(order => userIds.includes(order.userId));
+
+    return matchedOrders.map(order => {
+      const user = matchedUsers.find(u => u._id === order.userId);
+      return {
+        userId: order.userId, // ID của user để hiển thị trong cột ID
+        orderId: order._id, // ID của order để dùng làm key
+        user: user?.name || "Unknown",
+        email: user?.email || "N/A",
+        registeredDate: order.createdAt,
+        expiryDate: order.expiryDate,
+        status: order.status,
+        amount: order.amount,
+      };
+    });
+  },
+});
+
+
+//lay tat ca don hang
+export const getAllOrders = query(async ({ db }) => {
+  return await db.query("orders").collect();
+});
+
+//dua vao pricing data lay plan
+export const findPlanByPrice = (price) => {
+  const plan = LOOKUP_DATA.PRICING_OPTIONS.find(p => Math.floor(p.price_f) === Math.floor(price));
+  return plan ? plan.name : "Miễn phí";
+};
+
