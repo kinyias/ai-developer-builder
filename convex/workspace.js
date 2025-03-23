@@ -3,7 +3,7 @@ import { mutation } from "./_generated/server";
 import { query } from "./_generated/server";
 
 //  Tạo workspace mới
-export const space = mutation({
+export const CreateWorkspace = mutation({
   args: {
     messages: v.array(v.object({ role: v.string(), content: v.string() })), 
     user: v.id("users"),
