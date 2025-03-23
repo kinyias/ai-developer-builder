@@ -11,16 +11,12 @@ export default function HomeLayout({ children }) {
 
   return (
     <>
-      
-       
-        <SidebarProvider defaultOpen={false}>
+      <SidebarProvider defaultOpen={false}>
+        <AppSideBar />
+        <SidebarTrigger/>
+        <MessageProvider> {children}</MessageProvider>
+      </SidebarProvider>
 
-          <AppSideBar />
-          {children}
-          <SidebarTrigger />
-          <MessageProvider></MessageProvider>
-        </SidebarProvider>
-    
     </>
   );
 }

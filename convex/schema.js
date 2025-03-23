@@ -7,7 +7,8 @@ export default defineSchema({ //bảng user
         email:v.string(),
         picture:v.string(),
         uid:v.string(),
-        token:v.optional(v.number())
+        token:v.optional(v.number()),
+        date: v.string()
     }),
     orders: defineTable({
         userId: v.id("users"),           // ✅ Dùng string để lưu userId

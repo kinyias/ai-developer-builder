@@ -3,7 +3,7 @@ import { mutation } from "./_generated/server";
 import { query } from "./_generated/server";
 
 //  Tạo workspace mới
-export const CreateWorkspace = mutation({
+export const space = mutation({
   args: {
     messages: v.array(v.object({ role: v.string(), content: v.string() })), 
     user: v.id("users"),
@@ -102,5 +102,18 @@ export const GetAllWorkspace=query({
     .filter(q=>q.eq(q.field('user'),args.userId))
     .collect();
     return result;
+  }
+})
+export const DeleteWorkspace=mutation({
+  args:{
+    workspaceId:v.id('workspace')
+  },
+  handler:async(ctx,args)=>{
+    const result=await ctx.db.get(args.workspaceId);
+    if (!result) {
+      throw new Error('Workspace not found');
+    }
+    await ctx.db.delete(args.workspaceId);
+    return { success: true };
   }
 })

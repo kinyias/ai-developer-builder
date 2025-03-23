@@ -10,6 +10,8 @@ import ConvexClientProvider from './ConvexClientProvider';
 import { UserDetailProvider } from './context/UserDetailContext'; // Sử dụng đường dẫn tương đối
 import { useState } from 'react';
 import { ActionContext } from '@/context/ActionContext';
+import { SidebarTrigger } from '@/components/ui/sidebar';
+import AppSideBar from '@/components/layouts/AppSideBar';
 
 const beVietnamPro = localFont({
   src: [
@@ -39,9 +41,8 @@ export default function RootLayout({ children }) {
     <ClerkProvider dynamic afterSignOutUrl="/">
       <html lang="en" suppressHydrationWarning>
         <body className={`${beVietnamPro.className} antialiased`}>
-          
           <ActionContext.Provider value={{ action, setAction }}>
-              <Header/>
+            <Header/>
             <ThemeProvider
               attribute="class"
               defaultTheme="light"

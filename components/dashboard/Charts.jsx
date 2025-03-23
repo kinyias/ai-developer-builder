@@ -4,6 +4,8 @@ import { Area, AreaChart, Bar, BarChart, CartesianGrid, XAxis, YAxis } from "rec
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import { useQuery } from "convex/react"
+import { api } from "@/convex/_generated/api"
 
 // Sample data for the revenue chart
 const revenueData = [
@@ -22,20 +24,20 @@ const revenueData = [
 ]
 
 // Sample data for the users chart
-const userData = [
-  { month: "Jan", newUsers: 120, activeUsers: 800 },
-  { month: "Feb", newUsers: 180, activeUsers: 950 },
-  { month: "Mar", newUsers: 150, activeUsers: 1100 },
-  { month: "Apr", newUsers: 220, activeUsers: 1250 },
-  { month: "May", newUsers: 250, activeUsers: 1400 },
-  { month: "Jun", newUsers: 280, activeUsers: 1600 },
-  { month: "Jul", newUsers: 300, activeUsers: 1850 },
-  { month: "Aug", newUsers: 280, activeUsers: 2000 },
-  { month: "Sep", newUsers: 320, activeUsers: 2200 },
-  { month: "Oct", newUsers: 350, activeUsers: 2400 },
-  { month: "Nov", newUsers: 380, activeUsers: 2600 },
-  { month: "Dec", newUsers: 450, activeUsers: 3000 },
-]
+// const userData = [
+//   { date: "2025-03-01", newUsers: 10, activeUsers: 10 },
+//   { date: "2025-03-02", newUsers: 15, activeUsers: 25 },
+//   { date: "2025-03-03", newUsers: 20, activeUsers: 45 },
+//   { date: "2025-03-04", newUsers: 30, activeUsers: 75 },
+//   { date: "2025-03-05", newUsers: 25, activeUsers: 100 },
+//   { date: "2025-03-06", newUsers: 18, activeUsers: 118 },
+//   { date: "2025-03-07", newUsers: 22, activeUsers: 140 },
+//   { date: "2025-03-08", newUsers: 28, activeUsers: 168 },
+//   { date: "2025-03-09", newUsers: 35, activeUsers: 203 },
+//   { date: "2025-03-10", newUsers: 40, activeUsers: 243 },
+//   { date: "2025-03-11", newUsers: 50, activeUsers: 293 },
+//   { date: "2025-03-12", newUsers: 60, activeUsers: 353 },
+// ];
 
 // Chart configurations
 const revenueChartConfig = {
@@ -43,7 +45,7 @@ const revenueChartConfig = {
     label: "Revenue",
     color: "hsl(var(--chart-1))",
   },
-} 
+}
 const userChartConfig = {
   newUsers: {
     label: "New Users",
@@ -65,6 +67,7 @@ const formatCurrency = (value) => {
 }
 
 export default function DashboardCharts() {
+  const userData = useQuery(api.users.getUserStats);
   return (
     <Card className="col-span-4">
       <CardHeader>
@@ -106,13 +109,27 @@ export default function DashboardCharts() {
           </TabsContent>
           <TabsContent value="users" className="pt-4">
             <ChartContainer config={userChartConfig} className="h-[300px] w-full">
-              <BarChart data={userData} margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
+              <BarChart
+                data={userData}
+                margin={{ top: 20, right: 20, left: 20, bottom: 20 }}
+                barGap={6} // Tạo khoảng cách giữa các cột
+                barCategoryGap={30} // Điều chỉnh khoảng cách nhóm cột
+              >
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-                <XAxis dataKey="month" className="text-xs text-muted-foreground" tickLine={false} axisLine={false} />
-                <YAxis className="text-xs text-muted-foreground" tickLine={false} axisLine={false} />
+                <XAxis
+                  dataKey="date"
+                  className="text-xs text-muted-foreground"
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <YAxis
+                  className="text-xs text-muted-foreground"
+                  tickLine={false}
+                  axisLine={false}
+                />
                 <ChartTooltip content={<ChartTooltipContent />} />
-                <Bar dataKey="newUsers" fill="hsl(var(--chart-2))" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="activeUsers" fill="hsl(var(--chart-1))" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="newUsers" fill="hsl(var(--chart-2))" radius={[4, 4, 0, 0]} barSize={20} />
+                <Bar dataKey="activeUsers" fill="hsl(var(--chart-1))" radius={[4, 4, 0, 0]} barSize={20} />
               </BarChart>
             </ChartContainer>
           </TabsContent>
