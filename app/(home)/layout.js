@@ -1,12 +1,9 @@
 'use client';
 import AppSideBar from '@/components/layouts/AppSideBar';
 import Header from '@/components/layouts/Header';
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
-import ChatView from '@/components/workspace/ChatView';
-import { ActionContext } from '@/context/ActionContext';
+import Footer from '@/components/layouts/Footer';
+import { SidebarProvider } from '@/components/ui/sidebar';
 import { MessageProvider } from '@/context/MessageContext';
-import { useState } from 'react';
-
 export default function HomeLayout({ children }) {
   return (
     <>
@@ -15,6 +12,7 @@ export default function HomeLayout({ children }) {
         <div className="flex flex-col w-full">
           <Header />
           {children}
+          <Footer/>
         </div>
         <MessageProvider></MessageProvider>
       </SidebarProvider>
