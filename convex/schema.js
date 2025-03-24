@@ -23,5 +23,10 @@ export default defineSchema({ //bảng user
         messages:v.any(),
         fileData:v.optional(v.any()),
         user:v.id('users')
+    }),
+    tickets:defineTable({
+        name:v.string(),
+        email:v.string(),
+        messages:v.any(),
     })
 })

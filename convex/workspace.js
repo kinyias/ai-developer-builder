@@ -27,27 +27,6 @@ export const GetWorkspace = query({
   },
 });
 
-// export const AddMessageToWorkspace = mutation({
-//     args: {
-//       workspaceId: v.id("workspace"),
-//       message: v.object({ role: v.string(), content: v.string() }),
-//     },
-//     handler: async (ctx, args) => {
-//       const workspace = await ctx.db.get(args.workspaceId);
-//       if (!workspace) throw new Error("Workspace không tồn tại!");
-  
-//       console.log(" Tin nhắn trước khi thêm:", workspace.messages);
-  
-//       await ctx.db.patch(args.workspaceId, {
-//         messages: [...(workspace.messages || []), args.message],
-//       });
-  
-//       console.log(" Tin nhắn mới đã được thêm:", args.message);
-  
-//       return args.workspaceId;
-//     },
-//   });
-
 //  Cập nhật danh sách tin nhắn trong workspace
 export const UpdateMessages = mutation({
   args: {

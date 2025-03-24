@@ -8,7 +8,7 @@ function Pricing() {
 
   return (
     <div className="mt-10 flex flex-col items-center w-full p-10 md:px-32 lg:px-48">
-      <h2 className="font-bold text-3xl">Pricing</h2>
+      <h2 className="font-bold text-3xl">Bảng giá</h2>
       <p className="text-gray-400 max-w-xl text-center mt-4">
         {LOOKUP_DATA.PRICING_DESC}
       </p>

@@ -194,7 +194,9 @@ export default function AboutPage() {
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
               <Button size="lg" variant="outline">
+                <Link href='/docs'>
                 Xem tài liệu
+                </Link>
               </Button>
             </div>
           </div>
