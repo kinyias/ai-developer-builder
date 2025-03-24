@@ -40,6 +40,7 @@ export const CreateTicket = mutation({
       name: v.optional(v.string()),
       email: v.optional(v.string()),
       messages: v.optional(v.any()),
+      status: v.optional(v.boolean()),
     },
     handler: async (ctx, args) => {
       await ctx.db.patch(args.ticketId, {

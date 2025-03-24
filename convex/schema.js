@@ -28,5 +28,6 @@ export default defineSchema({ //bảng user
         name:v.string(),
         email:v.string(),
         messages:v.any(),
+        status: v.boolean(false),
     })
 })
