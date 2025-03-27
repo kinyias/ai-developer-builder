@@ -150,8 +150,8 @@ export default function ChatView() {
         <form className="relative">
           <div className='flex gap-2  items-end'  >
               {userDetail && <Image src={userDetail?.picture} 
-              className='rounded-full cursor-pointer'
-              onClick={toggleSidebar}  
+              className='rounded-full '
+              
               alt='user' width={30} height={30}/>}
             <div className="p-5 border rounded-xl w-full">
               <div className="flex gap-2">

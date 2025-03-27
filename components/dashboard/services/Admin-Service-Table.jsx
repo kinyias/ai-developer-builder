@@ -18,7 +18,7 @@ import { Card, CardContent } from "@/components/ui/card"
 //import cac ham lien quan convex
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-//import { getAllUsers } from "../../../convex/users"; // Import hàm getAllUsers từ file users.js
+import { getAllUsers } from "../../../convex/users"; // Import hàm getAllUsers từ file users.js
 import { findPlanByPrice } from "../../../convex/orders";
 
 // Format date for display
