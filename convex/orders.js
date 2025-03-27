@@ -168,7 +168,9 @@ export const searchOrdersByEmail = mutation({
 
 //lay tat ca don hang
 export const getAllOrders = query(async ({ db }) => {
-  return await db.query("orders").collect();
+  return await db.query("orders")
+  .order("desc") // Sort direction
+  .collect();
 });
 
 //dua vao pricing data lay plan

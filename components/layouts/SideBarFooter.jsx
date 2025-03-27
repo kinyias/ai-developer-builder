@@ -21,7 +21,6 @@ function SideBarFooter() {
         name: 'Đăng kí',
         icon: Wallet,
         action: async () => {
-            await signOut(); // Gọi hàm đăng xuất
             router.push('/pricing'); // Chuyển hướng về trang chủ sau khi đăng xuất
         },
     },
