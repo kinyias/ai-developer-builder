@@ -56,7 +56,7 @@ function PricingMode() {
           <h2 className='font-bold text-2xl'>{pricing.name}</h2>
           <h2 className='font-medium text-lg'>{pricing.tokens} Tokens</h2>
           <p className='text-gray-400'>{pricing.desc}</p>
-          <h2 className='font-bold text-4xl text-center mt-6'>{pricing.price} VND</h2>
+          <h2 className='font-bold text-2xl text-center mt-6'>{pricing.price} VND</h2>
 
           <Button onClick={() => openPaymentModal(pricing)}>Nâng cấp {pricing.name}</Button>
         </div>

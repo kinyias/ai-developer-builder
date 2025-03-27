@@ -5,13 +5,15 @@ export const CreateTicket = mutation({
     args: {
       name: v.string(),
       email: v.string(),
-      messages: v.any(),
+      message: v.any(),
+      status: v.boolean(),
     },
     handler: async (ctx, args) => {
       const ticketId = await ctx.db.insert("tickets", {
         name: args.name,
         email: args.email,
-        messages: args.messages,
+        message: args.message,
+        status: args.status
       });
       return ticketId;
     },
@@ -39,7 +41,7 @@ export const CreateTicket = mutation({
       ticketId: v.id("tickets"),
       name: v.optional(v.string()),
       email: v.optional(v.string()),
-      messages: v.optional(v.any()),
+      message: v.optional(v.any()),
       status: v.optional(v.boolean()),
     },
     handler: async (ctx, args) => {

@@ -54,7 +54,7 @@ function WorkspaceHistory() {
   };
   return (
     <div>
-      <h2 className="font-medium text-lg">Your Chats</h2>
+      <h2 className="font-medium text-lg">Chat của bạn</h2>
       <div>
         {workspaceList?.length > 0 ? (
           workspaceList.map((workspace, index) => (
@@ -84,7 +84,7 @@ function WorkspaceHistory() {
             </div>
           ))
         ) : (
-          <p className="text-gray-500 text-sm mt-2">No workspaces found.</p>
+          <p className="text-gray-500 text-sm mt-2">Bạn chưa có chat nào.</p>
         )}
       </div>
     </div>

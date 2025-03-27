@@ -26,6 +26,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { AlertCircle, CheckCircle2, Loader2 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import Link from 'next/link';
+import { useMutation } from 'convex/react';
+import { api } from '@/convex/_generated/api';
 
 // Define the form schema
 const formSchema = z.object({
@@ -38,7 +40,7 @@ export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isError, setIsError] = useState(false);
-
+  const createTicket = useMutation(api.tickets.CreateTicket);
   // Initialize form
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -56,7 +58,13 @@ export default function ContactPage() {
     setIsError(false);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const ticketId = await createTicket({
+        name: values.name,
+        email: values.email,
+        message: values.message,
+        status: false
+      });
+      console.log(ticketId);
       console.log(values);
       setIsSuccess(true);
       form.reset();

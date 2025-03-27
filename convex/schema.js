@@ -27,7 +27,7 @@ export default defineSchema({ //bảng user
     tickets:defineTable({
         name:v.string(),
         email:v.string(),
-        messages:v.any(),
+        message:v.any(),
         status: v.boolean(false),
     })
 })
