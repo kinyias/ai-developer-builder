@@ -63,7 +63,10 @@ export const UpdateToken = mutation({
     return result;
   }
 });
-
+//lay tat ca user
+export const getAllUsers = query(async ({ db }) => {
+  return await db.query("users").collect();
+});
 //lay tong so user
 export default query(async ({ db }) => {
   return await db.query("users").count();
