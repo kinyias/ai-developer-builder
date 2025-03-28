@@ -1,6 +1,5 @@
 'use client'; // Chỉ định rằng file này sẽ chạy trên client-side.
 
-import { useMessage } from '@/hooks/use-message'; // Hook quản lý state tin nhắn (không cần thiết nữa nếu dùng Convex).
 import { useParams } from 'next/navigation'; // Hook lấy tham số từ URL.
 import React, { useEffect, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'; // Thành phần hiển thị ảnh đại diện.
@@ -11,12 +10,11 @@ import axios from 'axios'; // Thư viện gửi request HTTP.
 import Prompt from '@/data/Prompt'; // Prompt mặc định cho AI.
 import ReactMarkdown from 'react-markdown'; // Thư viện để hiển thị nội dung markdown.
 
-import { useConvex, useMutation, useQuery } from 'convex/react'; // Hook để tương tác với Convex.
+import { useMutation, useQuery } from 'convex/react'; // Hook để tương tác với Convex.
 import { api } from '@/convex/_generated/api'; // API từ Convex để truy vấn và cập nhật dữ liệu.
 import { useUserDetail } from '../../app/context/UserDetailContext';
 
 import Image from 'next/image';
-import { useSidebar } from '../ui/sidebar';
 
 
 export const countToken = (inputText) => {
@@ -30,9 +28,6 @@ export default function ChatView() {
   const { id } = useParams(); // Lấy workspace ID từ URL.
   const [userInput, setUserInput] = useState(''); // State lưu tin nhắn do người dùng nhập vào.
   const [loading, setLoading] = useState(false);
-   const { toggleSidebar } = useSidebar();
- 
-  const convex=useConvex();
   // Lấy danh sách tin nhắn từ Convex dựa vào workspace ID.
   const messages =
     useQuery(api.workspace.GetMessages, { workspaceId: id }) || [];
@@ -130,7 +125,7 @@ export default function ChatView() {
           >
             {msg.role === 'user' && (
               <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" />
+                <AvatarImage src={userDetail?.picture} />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
             )}
@@ -142,7 +137,7 @@ export default function ChatView() {
         {loading && (
           <div className="p-3 round-lg mb-2 flex gap-2 items-center bg-gray-200 dark:bg-secondary">
             <Loader2Icon className="animate-spin" />
-            <h2>Generating response...</h2>
+            <h2>Đang tạo câu trả lời...</h2>
           </div>
         )}
       </div>
@@ -160,7 +155,7 @@ export default function ChatView() {
                   value={userInput}
                   onChange={(e) => setUserInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="How can I help you today?"
+                  placeholder="Tôi có thể giúp được gì cho bạn?"
                 ></textarea>
               </div>
             </div>

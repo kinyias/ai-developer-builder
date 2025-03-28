@@ -10,27 +10,18 @@ function SideBarFooter() {
     const router = useRouter();
     const { signOut } = useClerk();
     const options = [{
-        name: 'Settings',
+        name: 'Cài đặt',
         icon: Settings
     },
     {
-        name: 'Helps Center',
+        name: 'Trợ giúp',
         icon: HelpCircle
     },
     {
-        name: 'My Subcription',
+        name: 'Đăng kí',
         icon: Wallet,
         action: async () => {
-            await signOut(); // Gọi hàm đăng xuất
             router.push('/pricing'); // Chuyển hướng về trang chủ sau khi đăng xuất
-        },
-    },
-    {
-        name: 'Sign out',
-        icon: LogOut,
-        action: async () => {
-            await signOut(); // Gọi hàm đăng xuất
-            router.push('/'); // Chuyển hướng về trang chủ sau khi đăng xuất
         },
     },
 

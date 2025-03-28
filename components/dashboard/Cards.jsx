@@ -21,9 +21,6 @@ export default function DashboardCards() {
         <CardContent>
           <div className="text-2xl font-bold">{totalRevenue.toLocaleString()}đ</div>
           <p className="text-xs text-muted-foreground"></p>
-          <div className="mt-4 h-1 w-full rounded-full bg-muted">
-            <div className="h-1 w-[75%] rounded-full bg-primary"></div>
-          </div>
         </CardContent>
       </Card>
       <Card>
@@ -34,9 +31,6 @@ export default function DashboardCards() {
         <CardContent>
           <div className="text-2xl font-bold">{totalOrders}</div>
           <p className="text-xs text-muted-foreground"></p>
-          <div className="mt-4 h-1 w-full rounded-full bg-muted">
-            <div className="h-1 w-[65%] rounded-full bg-primary"></div>
-          </div>
         </CardContent>
       </Card>
       <Card>
@@ -47,9 +41,6 @@ export default function DashboardCards() {
         <CardContent>
           <div className="text-2xl font-bold">+{totalCustomers}</div>
           {/* <p className="text-xs text-muted-foreground">+19% so với tháng trước</p> */}
-          <div className="mt-4 h-1 w-full rounded-full bg-muted">
-            <div className="h-1 w-[45%] rounded-full bg-primary"></div>
-          </div>
         </CardContent>
       </Card>
       {/* <Card>

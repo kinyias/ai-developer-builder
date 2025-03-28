@@ -134,7 +134,7 @@ export default function CodeView() {
       absolute top-0 rounded-lg w-full h-full flex items-center justify-center"
         >
           <Loader2Icon className="animate-spin h-10 w-10 text-white" />
-          <h2 className="text-white">Generating your file</h2>
+          <h2 className="text-white">Đang tạo file</h2>
         </div>
       )}
     </div>

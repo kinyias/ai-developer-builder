@@ -27,7 +27,7 @@ function AppSideBar() {
         <Sidebar>
             <SidebarHeader className="p-5">
                 <Button className="mt-5" onClick={handleStartNewChat} >
-                    <MessageCircleCode /> Start new chat
+                    <MessageCircleCode /> Bắt đầu chat mới
                 </Button>
             </SidebarHeader>
 
