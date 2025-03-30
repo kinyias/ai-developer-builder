@@ -218,11 +218,12 @@ export function TicketsTable() {
           <TableBody>
             {paginatedTickets.map((ticket) => (
               <TableRow
-                key={ticket.id}
+                key={ticket._id}
                 className="cursor-pointer"
-                onClick={() => handleViewTicket(ticket.id)}
+                onClick={() => handleViewTicket(ticket._id)}
               >
-                <TableCell className="font-medium">{ticket._id}</TableCell>
+                <TableCell className="font-medium">{
+                      ticket._id.slice(0, 10) + '...'}</TableCell>
                 <TableCell className="max-w-[200px] truncate">
                   {ticket.name}
                 </TableCell>
