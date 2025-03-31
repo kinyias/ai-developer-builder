@@ -106,7 +106,7 @@ export default function CodeView() {
       </div>
       <SandpackProvider
         template="react"
-        theme={localStorage.getItem('theme')}
+        theme={localStorage.getItem('theme')== 'system'? 'auto':localStorage.getItem('theme')}
         files={files}
         customSetup={{
           dependencies: Prompt.DEPENDANCY,
