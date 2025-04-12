@@ -12,6 +12,7 @@ import { useMutation, useQuery } from "convex/react"; // Hook của Convex để
 import { useClerk } from "@clerk/nextjs"; // Hook của Clerk để xử lý xác thực người dùng.
 
 import Link from 'next/link'; // chạy pricing
+import axios from 'axios';
 
 export default function Home() {
   const { user } = useUser(); // Lấy thông tin người dùng đang đăng nhập từ Clerk.

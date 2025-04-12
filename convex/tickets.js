@@ -45,7 +45,7 @@ export const CreateTicket = mutation({
       status: v.optional(v.boolean()),
     },
     handler: async (ctx, args) => {
-      const { ticketId, ...updateFields } = args; 
+      const { ticketId, ...updateFields } = args;
       await ctx.db.patch(ticketId, updateFields);
       return { success: true };
     },

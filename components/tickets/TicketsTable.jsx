@@ -241,7 +241,7 @@ export function TicketsTable() {
                     variant="outline"
                     className={getStatusBadgeVariant(ticket.status)}
                   >
-                    {ticket.status ? 'Chờ xử lý' : 'Đã xử lý'}
+                    {ticket.status ? 'Đã xử lý' : 'Chờ xử lý' }
                   </Badge>
                 </TableCell>
                 <TableCell>{formatDate(ticket._creationTime)}</TableCell>

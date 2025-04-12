@@ -105,8 +105,6 @@ export function TicketDetails({ id }) {
         status: response.data.status
       }));
       
-      // Optional: show success message or redirect
-      // router.push('/dashboard/tickets');
     } catch (err) {
       setError('Failed to update ticket status');
       console.error('Update error:', err);
@@ -164,7 +162,7 @@ export function TicketDetails({ id }) {
           onClick={handleStatusTicket}
           disabled={isUpdating}
         >
-          {isUpdating ? 'Processing...' : ticket.status ? 'Đóng yêu cầu' : 'Mở lại yêu cầu'}
+          {isUpdating ? 'Processing...' : ticket.status ? 'Mở lại yêu cầu': 'Đóng yêu cầu'}
         </Button>
         
         {/* Optional: Add a back button */}

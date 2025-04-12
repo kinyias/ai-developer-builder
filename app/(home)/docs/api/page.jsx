@@ -74,13 +74,13 @@ export default function ApiDocsPage() {
                 </h2>
                 <p className="leading-7 mb-4">
                   AI Developer Builder API là RESTful API cho phép bạn tương tác
-                  theo chương trình với nền tảng AI Developer Builder. Bạn có thể sử dụng API để
-                  tạo chat, tạo code, thực hiện thanh toán v.v..
+                  theo chương trình với nền tảng AI Developer Builder. Bạn có
+                  thể sử dụng API để tạo chat, tạo code, thực hiện thanh toán
+                  v.v..
                 </p>
                 <p className="leading-7 mb-4">
-                 Dưới đây là một vài hướng dẫn về API.
+                  Dưới đây là một vài hướng dẫn về API.
                 </p>
-       
               </section>
 
               <section id="base-url" className="mb-10">
@@ -109,7 +109,8 @@ export default function ApiDocsPage() {
                   <code>https://ai-developer-builder.vercel.app</code>
                 </div>
                 <p className="leading-7 mb-4">
-                  Ví dụ, bạn muốn nhập prompt và lấy thông tin response chat, bạn sẽ tạo POST request đến:
+                  Ví dụ, bạn muốn nhập prompt và lấy thông tin response chat,
+                  bạn sẽ tạo POST request đến:
                 </p>
                 <div className="relative rounded-md bg-muted p-4 font-mono text-sm">
                   <code>https://ai-developer-builder.vercel.app/ai-chat</code>
@@ -121,8 +122,9 @@ export default function ApiDocsPage() {
                   Endpoints
                 </h2>
                 <p className="leading-7 mb-4">
-                AI Developer Builder cung cấp các endpoints để quản lý nhiều
-                tài nguyên khác nhau. Dưới đây là tóm tắt về các endpoints có sẵn..
+                  AI Developer Builder cung cấp các endpoints để quản lý nhiều
+                  tài nguyên khác nhau. Dưới đây là tóm tắt về các endpoints có
+                  sẵn..
                 </p>
 
                 <h3
@@ -212,6 +214,93 @@ export default function ApiDocsPage() {
                               </tr>
                             </tbody>
                           </table>
+                        </div>
+
+                        <div className="space-y-2">
+                          <h4 className="font-medium">Example Response</h4>
+                          <div className="relative rounded-md bg-muted p-4 font-mono text-sm">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="absolute right-2 top-2 h-8 w-8 opacity-70 hover:opacity-100"
+                              onClick={() =>
+                                copyToClipboard(
+                                  '{\n  "data": [\n    {\n      "id": "proj_1a2b3c4d5e6f",\n      "name": "My Project",\n      "description": "A sample project",\n      "created_at": "2023-01-15T12:00:00Z",\n      "updated_at": "2023-01-20T15:30:00Z",\n      "status": "active"\n    },\n    {\n      "id": "proj_2b3c4d5e6f7g",\n      "name": "Another Project",\n      "description": "Another sample project",\n      "created_at": "2023-02-10T09:15:00Z",\n      "updated_at": "2023-02-12T14:45:00Z",\n      "status": "active"\n    }\n  ],\n  "meta": {\n    "current_page": 1,\n    "total_pages": 5,\n    "total_count": 42,\n    "per_page": 10\n  }\n}',
+                                  'response-list-projects'
+                                )
+                              }
+                            >
+                              {copied === 'response-list-projects' ? (
+                                <Check className="h-4 w-4" />
+                              ) : (
+                                <Copy className="h-4 w-4" />
+                              )}
+                            </Button>
+                            <code>
+                              {'{'}
+                              <br />
+                              &nbsp;&nbsp;"data": [<br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;{'{'}
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"id":
+                              "proj_1a2b3c4d5e6f",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name": "My
+                              Project",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"description":
+                              "A sample project",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"created_at":
+                              "2023-01-15T12:00:00Z",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"updated_at":
+                              "2023-01-20T15:30:00Z",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"status":
+                              "active"
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;{'}'},<br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;{'{'}
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"id":
+                              "proj_2b3c4d5e6f7g",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name":
+                              "Another Project",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"description":
+                              "Another sample project",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"created_at":
+                              "2023-02-10T09:15:00Z",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"updated_at":
+                              "2023-02-12T14:45:00Z",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"status":
+                              "active"
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;{'}'}
+                              <br />
+                              &nbsp;&nbsp;],
+                              <br />
+                              &nbsp;&nbsp;"meta": {'{'}
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;"current_page": 1,
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;"total_pages": 5,
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;"total_count": 42,
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;"per_page": 10
+                              <br />
+                              &nbsp;&nbsp;{'}'}
+                              <br />
+                              {'}'}
+                              <br />
+                            </code>
+                          </div>
                         </div>
                       </div>
                     </AccordionContent>
@@ -347,6 +436,92 @@ export default function ApiDocsPage() {
                             </tbody>
                           </table>
                         </div>
+                        <div className="space-y-2">
+                          <h4 className="font-medium">Example Response</h4>
+                          <div className="relative rounded-md bg-muted p-4 font-mono text-sm">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="absolute right-2 top-2 h-8 w-8 opacity-70 hover:opacity-100"
+                              onClick={() =>
+                                copyToClipboard(
+                                  '{\n  "data": [\n    {\n      "id": "proj_1a2b3c4d5e6f",\n      "name": "My Project",\n      "description": "A sample project",\n      "created_at": "2023-01-15T12:00:00Z",\n      "updated_at": "2023-01-20T15:30:00Z",\n      "status": "active"\n    },\n    {\n      "id": "proj_2b3c4d5e6f7g",\n      "name": "Another Project",\n      "description": "Another sample project",\n      "created_at": "2023-02-10T09:15:00Z",\n      "updated_at": "2023-02-12T14:45:00Z",\n      "status": "active"\n    }\n  ],\n  "meta": {\n    "current_page": 1,\n    "total_pages": 5,\n    "total_count": 42,\n    "per_page": 10\n  }\n}',
+                                  'response-list-projects'
+                                )
+                              }
+                            >
+                              {copied === 'response-list-projects' ? (
+                                <Check className="h-4 w-4" />
+                              ) : (
+                                <Copy className="h-4 w-4" />
+                              )}
+                            </Button>
+                            <code>
+                              {'{'}
+                              <br />
+                              &nbsp;&nbsp;"data": [<br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;{'{'}
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"id":
+                              "proj_1a2b3c4d5e6f",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name": "My
+                              Project",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"description":
+                              "A sample project",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"created_at":
+                              "2023-01-15T12:00:00Z",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"updated_at":
+                              "2023-01-20T15:30:00Z",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"status":
+                              "active"
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;{'}'},<br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;{'{'}
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"id":
+                              "proj_2b3c4d5e6f7g",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name":
+                              "Another Project",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"description":
+                              "Another sample project",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"created_at":
+                              "2023-02-10T09:15:00Z",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"updated_at":
+                              "2023-02-12T14:45:00Z",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"status":
+                              "active"
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;{'}'}
+                              <br />
+                              &nbsp;&nbsp;],
+                              <br />
+                              &nbsp;&nbsp;"meta": {'{'}
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;"current_page": 1,
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;"total_pages": 5,
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;"total_count": 42,
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;"per_page": 10
+                              <br />
+                              &nbsp;&nbsp;{'}'}
+                              <br />
+                              {'}'}
+                              <br />
+                            </code>
+                          </div>
+                        </div>
                       </div>
                     </AccordionContent>
                   </AccordionItem>
@@ -459,6 +634,93 @@ export default function ApiDocsPage() {
                               </tr>
                             </tbody>
                           </table>
+                        </div>
+
+                        <div className="space-y-2">
+                          <h4 className="font-medium">Example Response</h4>
+                          <div className="relative rounded-md bg-muted p-4 font-mono text-sm">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="absolute right-2 top-2 h-8 w-8 opacity-70 hover:opacity-100"
+                              onClick={() =>
+                                copyToClipboard(
+                                  '{\n  "data": [\n    {\n      "id": "proj_1a2b3c4d5e6f",\n      "name": "My Project",\n      "description": "A sample project",\n      "created_at": "2023-01-15T12:00:00Z",\n      "updated_at": "2023-01-20T15:30:00Z",\n      "status": "active"\n    },\n    {\n      "id": "proj_2b3c4d5e6f7g",\n      "name": "Another Project",\n      "description": "Another sample project",\n      "created_at": "2023-02-10T09:15:00Z",\n      "updated_at": "2023-02-12T14:45:00Z",\n      "status": "active"\n    }\n  ],\n  "meta": {\n    "current_page": 1,\n    "total_pages": 5,\n    "total_count": 42,\n    "per_page": 10\n  }\n}',
+                                  'response-list-projects'
+                                )
+                              }
+                            >
+                              {copied === 'response-list-projects' ? (
+                                <Check className="h-4 w-4" />
+                              ) : (
+                                <Copy className="h-4 w-4" />
+                              )}
+                            </Button>
+                            <code>
+                              {'{'}
+                              <br />
+                              &nbsp;&nbsp;"data": [<br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;{'{'}
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"id":
+                              "proj_1a2b3c4d5e6f",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name": "My
+                              Project",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"description":
+                              "A sample project",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"created_at":
+                              "2023-01-15T12:00:00Z",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"updated_at":
+                              "2023-01-20T15:30:00Z",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"status":
+                              "active"
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;{'}'},<br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;{'{'}
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"id":
+                              "proj_2b3c4d5e6f7g",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"name":
+                              "Another Project",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"description":
+                              "Another sample project",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"created_at":
+                              "2023-02-10T09:15:00Z",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"updated_at":
+                              "2023-02-12T14:45:00Z",
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"status":
+                              "active"
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;{'}'}
+                              <br />
+                              &nbsp;&nbsp;],
+                              <br />
+                              &nbsp;&nbsp;"meta": {'{'}
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;"current_page": 1,
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;"total_pages": 5,
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;"total_count": 42,
+                              <br />
+                              &nbsp;&nbsp;&nbsp;&nbsp;"per_page": 10
+                              <br />
+                              &nbsp;&nbsp;{'}'}
+                              <br />
+                              {'}'}
+                              <br />
+                            </code>
+                          </div>
                         </div>
                       </div>
                     </AccordionContent>
