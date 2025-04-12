@@ -96,15 +96,13 @@ export function TicketDetails({ id }) {
     setIsUpdating(true);
     try {
       const response = await axios.put(`/api/tickets/${id}`, { 
-        status: !ticket.status // Toggle the status
+        status: !ticket.ticket.status // Toggle the status
       });
-      
       // Update local state with the new status
       setTicket(prev => ({
         ...prev,
-        status: response.data.status
+        status: status
       }));
-      
     } catch (err) {
       setError('Failed to update ticket status');
       console.error('Update error:', err);
@@ -115,14 +113,13 @@ export function TicketDetails({ id }) {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   if (!ticket) return <div>No ticket found</div>;
-
   return (
     <Card>
       <CardHeader>
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <Badge variant="outline" className={getStatusBadgeVariant(true)}>
-              {ticket.ticket.status ? 'Chờ xử lý' : 'Đã xử lý'}
+              {ticket.ticket.status ?  'Đã xử lý' : 'Chờ xử lý'}
             </Badge>
           </div>
           <CardTitle className="text-xl">{ticket.ticket.email}</CardTitle>
@@ -158,11 +155,11 @@ export function TicketDetails({ id }) {
       </CardContent>
       <CardFooter className="flex justify-between">
         <Button 
-          variant={ticket.status ? "destructive" : "default"}
+          variant={ticket.ticket.status ? "destructive" : "default"}
           onClick={handleStatusTicket}
           disabled={isUpdating}
         >
-          {isUpdating ? 'Processing...' : ticket.status ? 'Mở lại yêu cầu': 'Đóng yêu cầu'}
+          {isUpdating ? 'Processing...' : ticket.ticket.status ? 'Mở lại yêu cầu': 'Đóng yêu cầu'}
         </Button>
         
         {/* Optional: Add a back button */}
